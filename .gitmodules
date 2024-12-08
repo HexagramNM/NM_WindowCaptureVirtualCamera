@@ -1,0 +1,4 @@
+[submodule "External/windows-classic-samples"]
+	path = External/windows-classic-samples
+	url = https://github.com/microsoft/Windows-classic-samples.git
+	branch = main
