@@ -1,0 +1,2 @@
+# NM_WindowCaptureVirtualCamera
+ウィンドウをキャプチャし、仮想カメラ（MediaFoundation, DirectShow）で映像を送る汎用ツール
