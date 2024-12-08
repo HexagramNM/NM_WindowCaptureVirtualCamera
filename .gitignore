@@ -1,0 +1,14 @@
+.vs
+Backup
+bin
+packages
+x64
+
+NM_WCVCam_DS/Debug
+NM_WCVCam_DS/Release
+NM_WCVCam_DS/x64
+NM_WCVCam_MF/x64
+NM_WindowCapture/x64
+
+*.vcxproj.user
+*.aps
