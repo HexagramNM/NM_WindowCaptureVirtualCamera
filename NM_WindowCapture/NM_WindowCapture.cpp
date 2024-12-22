@@ -128,6 +128,15 @@ void NM_WindowCapture::CreateSharedCaptureWindowTexture() {
 	}
 }
 
+void NM_WindowCapture::CloseSharedCaptureWindowTextureHandle() {
+	if (_sharedCaptureWindowHandle != NULL
+		&& _sharedCaptureWindowHandle != INVALID_HANDLE_VALUE) {
+
+		CloseHandle(_sharedCaptureWindowHandle);
+		_sharedCaptureWindowHandle = NULL;
+	}
+}
+
 // _captureTextureへのオフスクリーンレンダリングの準備
 void NM_WindowCapture::SetupOffscreenRendering() {
 	DXGI_FORMAT dxgiFormat = DXGI_FORMAT_B8G8R8A8_UNORM;
@@ -252,15 +261,26 @@ void NM_WindowCapture::StopCapture() {
 		_captureSession = nullptr;
 		_framePoolForCapture.Close();
 		_framePoolForCapture = nullptr;
-		_graphicsCaptureItem = nullptr;
+	}
+}
+
+void NM_WindowCapture::ChangeWindow() {
+	if (_graphicsCaptureItem == nullptr) {
+		return;
 	}
 
-	if (_sharedCaptureWindowHandle != NULL
-		&& _sharedCaptureWindowHandle != INVALID_HANDLE_VALUE) {
-
-		CloseHandle(_sharedCaptureWindowHandle);
-		_sharedCaptureWindowHandle = NULL;
+	if (IsCapturing()) {
+		StopCapture();
 	}
+
+	_capWinSize = _graphicsCaptureItem.Size();
+	_framePoolForCapture = Direct3D11CaptureFramePool::CreateFreeThreaded(_dxDeviceForCapture, 
+		DirectXPixelFormat::B8G8R8A8UIntNormalized, 2, _capWinSize);
+	_frameArrivedForCapture = _framePoolForCapture.FrameArrived(auto_revoke, { this, &NM_WindowCapture::OnFrameArrived });
+	_captureSession = _framePoolForCapture.CreateCaptureSession(_graphicsCaptureItem);
+	//IsCursorCaptureEnabledでカーソルもキャプチャするか指定できる。
+	_captureSession.IsCursorCaptureEnabled(false);
+	_captureSession.StartCapture();
 }
 
 void NM_WindowCapture::SetTargetWindowForCapture(HWND targetWindow)
@@ -274,14 +294,28 @@ void NM_WindowCapture::SetTargetWindowForCapture(HWND targetWindow)
 	auto interop = factory.as<::IGraphicsCaptureItemInterop>();
 	check_hresult(interop->CreateForWindow(targetWindow, guid_of<abi::IGraphicsCaptureItem>(),
 		reinterpret_cast<void**>(put_abi(_graphicsCaptureItem))));
-	_capWinSize = _graphicsCaptureItem.Size();
-	_framePoolForCapture = Direct3D11CaptureFramePool::CreateFreeThreaded(_dxDeviceForCapture,
-		DirectXPixelFormat::B8G8R8A8UIntNormalized, 2, _capWinSize);
-	_frameArrivedForCapture = _framePoolForCapture.FrameArrived(auto_revoke, { this, &NM_WindowCapture::OnFrameArrived });
-	_captureSession = _framePoolForCapture.CreateCaptureSession(_graphicsCaptureItem);
-	//IsCursorCaptureEnabledでカーソルもキャプチャするか指定できる。
-	_captureSession.IsCursorCaptureEnabled(false);
-	_captureSession.StartCapture();
+
+	if (IsCapturing()) {
+		ChangeWindow();
+	}
+}
+
+winrt::Windows::Foundation::IAsyncAction NM_WindowCapture::OpenWindowPicker()
+{
+	init_apartment(winrt::apartment_type::single_threaded);
+	SetWindowDisplayAffinity(_baseHwnd, WDA_EXCLUDEFROMCAPTURE);
+
+	GraphicsCapturePicker picker;
+	auto interop = picker.as<::IInitializeWithWindow>();
+	interop->Initialize(_baseHwnd);
+	GraphicsCaptureItem pickerResult = co_await picker.PickSingleItemAsync();
+	if (pickerResult != nullptr) {
+		_graphicsCaptureItem = pickerResult;
+	}
+
+	if (IsCapturing()) {
+		ChangeWindow();
+	}
 }
 
 void NM_WindowCapture::OnFrameArrived(Direct3D11CaptureFramePool const& sender,

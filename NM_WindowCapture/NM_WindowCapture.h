@@ -1,5 +1,6 @@
 #pragma once
 
+#include <shobjidl_core.h>
 #include <winrt/Windows.Foundation.h>
 #include <winrt/Windows.Graphics.h>
 #include <winrt/Windows.Graphics.Capture.h>
@@ -25,7 +26,8 @@ using namespace winrt::Windows::Graphics::Capture;
 class NM_WindowCapture
 {
 public:
-	NM_WindowCapture():
+	NM_WindowCapture(HWND baseHwnd):
+		_baseHwnd(baseHwnd),
 		_vbDesc{},
 		_polygonVertex{},
 		_graphicsCaptureItem(nullptr),
@@ -42,6 +44,8 @@ public:
 	{
 		StopVirtualCamera();
 		StopCapture();
+		_graphicsCaptureItem = nullptr;
+		CloseSharedCaptureWindowTextureHandle();
 	}
 
 	void CreateVirtualCamera();
@@ -50,11 +54,14 @@ public:
 
 	void CreateDirect3DDeviceForCapture();
 	void CreateSharedCaptureWindowTexture();
+	void CloseSharedCaptureWindowTextureHandle();
 	void SetupOffscreenRendering();
 	void DrawCaptureTexture(com_ptr<ID3D11Texture2D> currentTexture);
 
 	bool IsCapturing();
 	void StopCapture();
+	void ChangeWindow();
+	winrt::Windows::Foundation::IAsyncAction OpenWindowPicker();
 	void SetTargetWindowForCapture(HWND targetWindow);
 	void OnFrameArrived(Direct3D11CaptureFramePool const& sender,
 		winrt::Windows::Foundation::IInspectable const& args);
@@ -66,6 +73,7 @@ private:
 		::DirectX::XMFLOAT2 Tex;
 	};
 
+	HWND _baseHwnd;
 	com_ptr<IMFVirtualCamera> _vcam;
 
 	com_ptr<ID3D11Device> _dxDevice;

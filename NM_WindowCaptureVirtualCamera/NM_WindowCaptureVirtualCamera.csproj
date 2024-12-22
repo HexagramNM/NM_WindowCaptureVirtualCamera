@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net9.0-windows7.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="copy /y &quot;$(SolutionDir)NM_WindowCaptureVirtualCamera\bin\$(Configuration)\net9.0-windows7.0\NM_WindowCaptureVirtualCamera.exe&quot; &quot;$(SolutionDir)bin\$(Configuration)\NM_WindowCaptureVirtualCamera.exe&quot;&#xD;&#xA;copy /y &quot;$(SolutionDir)NM_WindowCaptureVirtualCamera\bin\$(Configuration)\net9.0-windows7.0\NM_WindowCaptureVirtualCamera.dll&quot; &quot;$(SolutionDir)bin\$(Configuration)\NM_WindowCaptureVirtualCamera.dll&quot;&#xD;&#xA;copy /y &quot;$(SolutionDir)NM_WindowCaptureVirtualCamera\bin\$(Configuration)\net9.0-windows7.0\NM_WindowCaptureVirtualCamera.runtimeconfig.json&quot; &quot;$(SolutionDir)bin\$(Configuration)\NM_WindowCaptureVirtualCamera.runtimeconfig.json&quot;" />
+  </Target>
+
+</Project>

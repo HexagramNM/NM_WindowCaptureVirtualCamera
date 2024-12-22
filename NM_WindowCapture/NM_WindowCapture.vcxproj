@@ -51,6 +51,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalOptions>/await %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -58,7 +59,8 @@
       <UACExecutionLevel>RequireAdministrator</UACExecutionLevel>
     </Link>
     <PostBuildEvent>
-      <Command>copy /y "$(SolutionDir)$(Platform)\$(Configuration)\NM_WindowCapture.dll" "$(SolutionDir)bin\$(Configuration)\NM_WindowCapture.dll"</Command>
+      <Command>copy /y "$(SolutionDir)$(Platform)\$(Configuration)\NM_WindowCapture.dll" "$(SolutionDir)bin\$(Configuration)\NM_WindowCapture.dll"
+copy /y "$(SolutionDir)$(Platform)\$(Configuration)\NM_WindowCapture.dll" "$(SolutionDir)NM_WindowCaptureVirtualCamera\bin\$(Configuration)\net9.0-windows7.0\NM_WindowCapture.dll""</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -70,6 +72,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalOptions>/await %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -79,7 +82,8 @@
       <UACExecutionLevel>RequireAdministrator</UACExecutionLevel>
     </Link>
     <PostBuildEvent>
-      <Command>copy /y "$(SolutionDir)$(Platform)\$(Configuration)\NM_WindowCapture.dll" "$(SolutionDir)bin\$(Configuration)\NM_WindowCapture.dll"</Command>
+      <Command>copy /y "$(SolutionDir)$(Platform)\$(Configuration)\NM_WindowCapture.dll" "$(SolutionDir)bin\$(Configuration)\NM_WindowCapture.dll"
+copy /y "$(SolutionDir)$(Platform)\$(Configuration)\NM_WindowCapture.dll" "$(SolutionDir)NM_WindowCaptureVirtualCamera\bin\$(Configuration)\net9.0-windows7.0\NM_WindowCapture.dll""</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
