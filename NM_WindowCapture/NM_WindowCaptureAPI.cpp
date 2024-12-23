@@ -1,4 +1,4 @@
-
+﻿
 #include <mfapi.h>
 #include "NM_WindowCaptureAPI.h"
 
@@ -9,8 +9,6 @@ void startupForMF() {
 NM_WindowCapture* createWindowCaptureObject(HWND baseHwnd)
 {
 	NM_WindowCapture* result = new NM_WindowCapture(baseHwnd);
-
-	result->CreateDirect3DDeviceForCapture();
 
 	return result;
 }
@@ -36,7 +34,6 @@ void startVirtualCamera(NM_WindowCapture* captureWindowObj)
 	if (captureWindowObj != nullptr)
 	{
 		captureWindowObj->CreateSharedCaptureWindowTexture();
-		captureWindowObj->SetupOffscreenRendering();
 		captureWindowObj->ChangeWindow();
 		captureWindowObj->CreateVirtualCamera();
 	}

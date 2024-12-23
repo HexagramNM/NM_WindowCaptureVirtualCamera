@@ -1,4 +1,4 @@
-
+ï»¿
 #include <windows.h>
 #include <sddl.h>
 #include <d3dcompiler.h>
@@ -79,12 +79,42 @@ void NM_WindowCapture::CreateDirect3DDeviceForCapture() {
 	_dxDeviceForCapture = device.as<winrt::Windows::Graphics::DirectX::Direct3D11::IDirect3DDevice>();
 }
 
+void NM_WindowCapture::CreatePreviewTexture() {
+	if (_dxDevice == nullptr) {
+		return;
+	}
+
+	//ãƒ—ãƒ¬ãƒ“ãƒ¥ãƒ¼ç”¨ãƒ†ã‚¯ã‚¹ãƒãƒ£
+	D3D11_TEXTURE2D_DESC bufferTextureDesc;
+
+	bufferTextureDesc.Width = VCAM_VIDEO_WIDTH;
+	bufferTextureDesc.Height = VCAM_VIDEO_HEIGHT;
+	bufferTextureDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
+	bufferTextureDesc.ArraySize = 1;
+	bufferTextureDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;
+	bufferTextureDesc.CPUAccessFlags = 0;
+	bufferTextureDesc.MipLevels = 1;
+	bufferTextureDesc.MiscFlags = 0;
+	bufferTextureDesc.SampleDesc.Count = 1;
+	bufferTextureDesc.SampleDesc.Quality = 0;
+	bufferTextureDesc.Usage = D3D11_USAGE_DEFAULT;
+
+	check_hresult(_dxDevice->CreateTexture2D(&bufferTextureDesc, 0, _previewTexture.put()));
+
+}
+
+void NM_WindowCapture::ClosePreviewTexture() {
+
+}
+
 void NM_WindowCapture::CreateSharedCaptureWindowTexture() {
 	if (_dxDevice == nullptr) {
 		return;
 	}
 
-	//‘¼ƒvƒƒZƒX‚Æ‹¤—L‚·‚é‚½‚ß‚ÌƒeƒNƒXƒ`ƒƒ
+	std::lock_guard lock(_sharedCaptureWindowLock);
+
+	//ä»–ãƒ—ãƒ­ã‚»ã‚¹ã¨å…±æœ‰ã™ã‚‹ãŸã‚ã®ãƒ†ã‚¯ã‚¹ãƒãƒ£
 	D3D11_TEXTURE2D_DESC bufferTextureDesc;
 
 	bufferTextureDesc.Width = VCAM_VIDEO_WIDTH;
@@ -104,15 +134,15 @@ void NM_WindowCapture::CreateSharedCaptureWindowTexture() {
 	com_ptr<IDXGIResource1> sharedCaptureWindowResource;
 	_sharedCaptureWindowTexture->QueryInterface(IID_PPV_ARGS(sharedCaptureWindowResource.put()));
 
-	// Session0‚Å‚ ‚éFrameServer‚Å‹¤—LƒeƒNƒXƒ`ƒƒ‚ÉƒAƒNƒZƒX‚Å‚«‚é‚æ‚¤‚É‚·‚é‚½‚ßA
-	// SECURITY_ATTRIBUTES‚ğİ’è‚·‚é•K—v‚ª‚ ‚éB
+	// Session0ã§ã‚ã‚‹FrameServerã§å…±æœ‰ãƒ†ã‚¯ã‚¹ãƒãƒ£ã«ã‚¢ã‚¯ã‚»ã‚¹ã§ãã‚‹ã‚ˆã†ã«ã™ã‚‹ãŸã‚ã€
+	// SECURITY_ATTRIBUTESã‚’è¨­å®šã™ã‚‹å¿…è¦ãŒã‚ã‚‹ã€‚
 	SECURITY_ATTRIBUTES secAttr;
 	secAttr.nLength = sizeof(SECURITY_ATTRIBUTES);
 	secAttr.bInheritHandle = FALSE;
 	secAttr.lpSecurityDescriptor = NULL;
 
-	// Local Service‚É‚Ì‚İ“Ç‚İæ‚è‚ÌƒAƒNƒZƒXŒ i¡‰ñ‚ÌFrameServer‚ÌƒpƒCƒvƒ‰ƒCƒ“‚È‚ç‚±‚ê‚Å\•ªj
-	// Interactive UseriŒ»İ‚Ìƒ†[ƒUj‚É‘SƒAƒNƒZƒXŒ ‚ğ•t—^‚·‚é‚È‚ç(A;;GA;;;IU)‚ğ’Ç‰Á‚·‚éB
+	// Local Serviceã«ã®ã¿èª­ã¿å–ã‚Šã®ã‚¢ã‚¯ã‚»ã‚¹æ¨©ï¼ˆä»Šå›ã®FrameServerã®ãƒ‘ã‚¤ãƒ—ãƒ©ã‚¤ãƒ³ãªã‚‰ã“ã‚Œã§ååˆ†ï¼‰
+	// Interactive Userï¼ˆç¾åœ¨ã®ãƒ¦ãƒ¼ã‚¶ï¼‰ã«å…¨ã‚¢ã‚¯ã‚»ã‚¹æ¨©ã‚’ä»˜ä¸ã™ã‚‹ãªã‚‰(A;;GA;;;IU)ã‚’è¿½åŠ ã™ã‚‹ã€‚
 	if (ConvertStringSecurityDescriptorToSecurityDescriptor(
 		TEXT("D:(A;;GR;;;LS)(A;;GR;;;IU)"),
 		SDDL_REVISION_1, &(secAttr.lpSecurityDescriptor), NULL)) {
@@ -126,6 +156,10 @@ void NM_WindowCapture::CreateSharedCaptureWindowTexture() {
 		mutex->AcquireSync(0, INFINITE);
 		mutex->ReleaseSync(MUTEX_KEY);
 	}
+
+	CD3D11_RENDER_TARGET_VIEW_DESC renderTargetViewDesc(D3D11_RTV_DIMENSION_TEXTURE2D, _dxgiFormat);
+	_dxDevice->CreateRenderTargetView(_sharedCaptureWindowTexture.get(),
+		&renderTargetViewDesc, _renderTargetViewForSharedCaptureWindow.put());
 }
 
 void NM_WindowCapture::CloseSharedCaptureWindowTextureHandle() {
@@ -137,13 +171,11 @@ void NM_WindowCapture::CloseSharedCaptureWindowTextureHandle() {
 	}
 }
 
-// _captureTexture‚Ö‚ÌƒIƒtƒXƒNƒŠ[ƒ“ƒŒƒ“ƒ_ƒŠƒ“ƒO‚Ì€”õ
+// _captureTextureã¸ã®ã‚ªãƒ•ã‚¹ã‚¯ãƒªãƒ¼ãƒ³ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã®æº–å‚™
 void NM_WindowCapture::SetupOffscreenRendering() {
-	DXGI_FORMAT dxgiFormat = DXGI_FORMAT_B8G8R8A8_UNORM;
-
-	CD3D11_RENDER_TARGET_VIEW_DESC renderTargetViewDesc(D3D11_RTV_DIMENSION_TEXTURE2D, dxgiFormat);
-	_dxDevice->CreateRenderTargetView(_sharedCaptureWindowTexture.get(),
-		&renderTargetViewDesc, _renderTargetView.put());
+	CD3D11_RENDER_TARGET_VIEW_DESC renderTargetViewDesc(D3D11_RTV_DIMENSION_TEXTURE2D, _dxgiFormat);
+	_dxDevice->CreateRenderTargetView(_previewTexture.get(),
+		&renderTargetViewDesc, _renderTargetViewForPreview.put());
 
 	D3D11_VIEWPORT vp = { 0.0f, 0.0f, (float)VCAM_VIDEO_WIDTH, (float)VCAM_VIDEO_HEIGHT, 0.0f, 1.0f };
 	_dxDeviceContext->RSSetViewports(1, &vp);
@@ -194,18 +226,14 @@ void NM_WindowCapture::SetupOffscreenRendering() {
 	_dxDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 }
 
-void NM_WindowCapture::DrawCaptureTexture(com_ptr<ID3D11Texture2D> currentTexture) {
-	com_ptr<IDXGIKeyedMutex> mutex;
-	_sharedCaptureWindowTexture.as(mutex);
-	mutex->AcquireSync(MUTEX_KEY, INFINITE);
-
-	ID3D11RenderTargetView* tempRenderTargetViewPtr = _renderTargetView.get();
+void NM_WindowCapture::DrawPreview() {
+	ID3D11RenderTargetView* tempRenderTargetViewPtr = _renderTargetViewForPreview.get();
 	_dxDeviceContext->OMSetRenderTargets(1, &tempRenderTargetViewPtr, nullptr);
 
 	float color[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
-	_dxDeviceContext->ClearRenderTargetView(_renderTargetView.get(), color);
+	_dxDeviceContext->ClearRenderTargetView(_renderTargetViewForPreview.get(), color);
 
-	// ƒ|ƒŠƒSƒ“’¸“_ˆÊ’u‚ÌŒvZ
+	// ãƒãƒªã‚´ãƒ³é ‚ç‚¹ä½ç½®ã®è¨ˆç®—
 	float xPosRate = 1.0f;
 	float yPosRate = 1.0f;
 	float rectRate = static_cast<float>(VCAM_VIDEO_WIDTH) / static_cast<float>(VCAM_VIDEO_HEIGHT);
@@ -224,7 +252,45 @@ void NM_WindowCapture::DrawCaptureTexture(com_ptr<ID3D11Texture2D> currentTextur
 	_polygonVertex[2] = { {-xPosRate, -yPosRate, 0.0f}, {0.0f, 1.0f} };
 	_polygonVertex[3] = { {xPosRate, -yPosRate, 0.0f}, {1.0f, 1.0f} };
 
-	// ¶‰E”½“]
+	_dxDeviceContext->UpdateSubresource(_vertexBuffer.get(), 0, nullptr, _polygonVertex, 0, 0);
+
+	_dxDeviceContext->Draw(4, 0);
+	_dxDeviceContext->Flush();
+
+	_dxDeviceContext->OMSetRenderTargets(0, nullptr, nullptr);
+}
+
+void NM_WindowCapture::DrawSharedCaptureWindow() {
+	com_ptr<IDXGIKeyedMutex> mutex;
+	_sharedCaptureWindowTexture.as(mutex);
+	mutex->AcquireSync(MUTEX_KEY, INFINITE);
+
+	ID3D11RenderTargetView* tempRenderTargetViewPtr = _renderTargetViewForSharedCaptureWindow.get();
+	_dxDeviceContext->OMSetRenderTargets(1, &tempRenderTargetViewPtr, nullptr);
+
+	float color[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
+	_dxDeviceContext->ClearRenderTargetView(_renderTargetViewForSharedCaptureWindow.get(), color);
+
+	// ãƒãƒªã‚´ãƒ³é ‚ç‚¹ä½ç½®ã®è¨ˆç®—
+	float xPosRate = 1.0f;
+	float yPosRate = 1.0f;
+	float rectRate = static_cast<float>(VCAM_VIDEO_WIDTH) / static_cast<float>(VCAM_VIDEO_HEIGHT);
+	float floatWindowWidth = static_cast<float>(_capWinSize.Width);
+	float floatWindowHeight = static_cast<float>(_capWinSize.Height);
+
+	if (floatWindowWidth > floatWindowHeight * rectRate) {
+		yPosRate = floatWindowHeight * rectRate / floatWindowWidth;
+	}
+	else {
+		xPosRate = floatWindowWidth / (floatWindowHeight * rectRate);
+	}
+
+	_polygonVertex[0] = { {-xPosRate, yPosRate, 0.0f}, {0.0f, 0.0f} };
+	_polygonVertex[1] = { {xPosRate, yPosRate, 0.0f}, {1.0f, 0.0f} };
+	_polygonVertex[2] = { {-xPosRate, -yPosRate, 0.0f}, {0.0f, 1.0f} };
+	_polygonVertex[3] = { {xPosRate, -yPosRate, 0.0f}, {1.0f, 1.0f} };
+
+	// å·¦å³åè»¢
 	if (_reverseWindow) {
 		_polygonVertex[0].Tex.x = 1.0f;
 		_polygonVertex[1].Tex.x = 0.0f;
@@ -233,11 +299,6 @@ void NM_WindowCapture::DrawCaptureTexture(com_ptr<ID3D11Texture2D> currentTextur
 	}
 
 	_dxDeviceContext->UpdateSubresource(_vertexBuffer.get(), 0, nullptr, _polygonVertex, 0, 0);
-
-	CD3D11_SHADER_RESOURCE_VIEW_DESC shaderResourceViewDesc(D3D11_SRV_DIMENSION_TEXTURE2D, DXGI_FORMAT_B8G8R8A8_UNORM);
-	_dxDevice->CreateShaderResourceView(currentTexture.get(), &shaderResourceViewDesc, _shaderResourceView.put());
-	ID3D11ShaderResourceView* tempShaderResourceViewPtr[] = { _shaderResourceView.get() };
-	_dxDeviceContext->PSSetShaderResources(0, 1, tempShaderResourceViewPtr);
 
 	_dxDeviceContext->Draw(4, 0);
 	_dxDeviceContext->Flush();
@@ -278,7 +339,7 @@ void NM_WindowCapture::ChangeWindow() {
 		DirectXPixelFormat::B8G8R8A8UIntNormalized, 2, _capWinSize);
 	_frameArrivedForCapture = _framePoolForCapture.FrameArrived(auto_revoke, { this, &NM_WindowCapture::OnFrameArrived });
 	_captureSession = _framePoolForCapture.CreateCaptureSession(_graphicsCaptureItem);
-	//IsCursorCaptureEnabled‚ÅƒJ[ƒ\ƒ‹‚àƒLƒƒƒvƒ`ƒƒ‚·‚é‚©w’è‚Å‚«‚éB
+	//IsCursorCaptureEnabledã§ã‚«ãƒ¼ã‚½ãƒ«ã‚‚ã‚­ãƒ£ãƒ—ãƒãƒ£ã™ã‚‹ã‹æŒ‡å®šã§ãã‚‹ã€‚
 	_captureSession.IsCursorCaptureEnabled(false);
 	_captureSession.StartCapture();
 }
@@ -338,10 +399,20 @@ void NM_WindowCapture::OnFrameArrived(Direct3D11CaptureFramePool const& sender,
 			DirectXPixelFormat::B8G8R8A8UIntNormalized, 2, _capWinSize);
 	}
 
-	//ƒLƒƒƒvƒ`ƒƒ‚µ‚½ƒtƒŒ[ƒ€‚©‚ç“¾‚ç‚ê‚éƒeƒNƒXƒ`ƒƒ‚ğ‹¤—LƒeƒNƒXƒ`ƒƒ‚ÉƒIƒtƒXƒNƒŠ[ƒ“ƒŒƒ“ƒ_ƒŠƒ“ƒO
+	//ã‚­ãƒ£ãƒ—ãƒãƒ£ã—ãŸãƒ•ãƒ¬ãƒ¼ãƒ ã‹ã‚‰å¾—ã‚‰ã‚Œã‚‹ãƒ†ã‚¯ã‚¹ãƒãƒ£ã‚’å…±æœ‰ãƒ†ã‚¯ã‚¹ãƒãƒ£ã«ã‚ªãƒ•ã‚¹ã‚¯ãƒªãƒ¼ãƒ³ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°
+	com_ptr<ID3D11Texture2D> currentTexture = getDXGIInterfaceFromObject<::ID3D11Texture2D>(frame.Surface());
+	CD3D11_SHADER_RESOURCE_VIEW_DESC shaderResourceViewDesc(D3D11_SRV_DIMENSION_TEXTURE2D, _dxgiFormat);
+	_dxDevice->CreateShaderResourceView(currentTexture.get(), &shaderResourceViewDesc, _shaderResourceView.put());
+	ID3D11ShaderResourceView* tempShaderResourceViewPtr[] = { _shaderResourceView.get() };
+	_dxDeviceContext->PSSetShaderResources(0, 1, tempShaderResourceViewPtr);
+	
+	if (_previewTexture != nullptr) {
+		DrawPreview();
+	}
+	
+	std::lock_guard lock(_sharedCaptureWindowLock);
 	if (_sharedCaptureWindowTexture != nullptr) {
-		com_ptr<ID3D11Texture2D> currentTexture = getDXGIInterfaceFromObject<::ID3D11Texture2D>(frame.Surface());
-		DrawCaptureTexture(currentTexture);
+		DrawSharedCaptureWindow();
 	}
 }
 /****************************************************************/

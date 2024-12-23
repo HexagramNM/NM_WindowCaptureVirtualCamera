@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <shobjidl_core.h>
 #include <winrt/Windows.Foundation.h>
@@ -11,6 +11,7 @@
 #include <windows.graphics.directx.direct3d11.interop.h>
 #include <Windows.Graphics.Capture.Interop.h>
 #include <mfvirtualcamera.h>
+#include <mutex>
 
 #include "../global_config.h"
 
@@ -34,10 +35,14 @@ public:
 		_framePoolForCapture(nullptr),
 		_captureSession(nullptr),
 		_sharedCaptureWindowHandle(nullptr),
+		_previewHandle(nullptr),
 		_reverseWindow(false)
 	{
 		_capWinSize.Width = 1;
 		_capWinSize.Height = 1;
+		CreateDirect3DDeviceForCapture();
+		CreatePreviewTexture();
+		SetupOffscreenRendering();
 	}
 
 	~NM_WindowCapture()
@@ -46,6 +51,7 @@ public:
 		StopCapture();
 		_graphicsCaptureItem = nullptr;
 		CloseSharedCaptureWindowTextureHandle();
+		ClosePreviewTexture();
 	}
 
 	void CreateVirtualCamera();
@@ -53,10 +59,13 @@ public:
 	void SwitchReverseCamera();
 
 	void CreateDirect3DDeviceForCapture();
+	void CreatePreviewTexture();
+	void ClosePreviewTexture();
 	void CreateSharedCaptureWindowTexture();
 	void CloseSharedCaptureWindowTextureHandle();
 	void SetupOffscreenRendering();
-	void DrawCaptureTexture(com_ptr<ID3D11Texture2D> currentTexture);
+	void DrawPreview();
+	void DrawSharedCaptureWindow();
 
 	bool IsCapturing();
 	void StopCapture();
@@ -67,6 +76,8 @@ public:
 		winrt::Windows::Foundation::IInspectable const& args);
 
 private:
+	static constexpr DXGI_FORMAT _dxgiFormat = DXGI_FORMAT_B8G8R8A8_UNORM;
+
 	struct VertexType
 	{
 		::DirectX::XMFLOAT3 Pos;
@@ -81,7 +92,11 @@ private:
 	com_ptr<ID3D11Texture2D> _sharedCaptureWindowTexture;
 	HANDLE _sharedCaptureWindowHandle;
 
-	com_ptr<ID3D11RenderTargetView> _renderTargetView;
+	com_ptr<ID3D11Texture2D> _previewTexture;
+	HANDLE _previewHandle;
+
+	com_ptr<ID3D11RenderTargetView> _renderTargetViewForSharedCaptureWindow;
+	com_ptr<ID3D11RenderTargetView> _renderTargetViewForPreview;
 	com_ptr<ID3D11ShaderResourceView> _shaderResourceView;
 	com_ptr<ID3D11VertexShader> _spriteVS;
 	com_ptr<ID3D11PixelShader> _spritePS;
@@ -99,4 +114,6 @@ private:
 	Direct3D11CaptureFramePool _framePoolForCapture;
 	event_revoker<IDirect3D11CaptureFramePool> _frameArrivedForCapture;
 	GraphicsCaptureSession _captureSession;
+
+	std::mutex _sharedCaptureWindowLock;
 };
