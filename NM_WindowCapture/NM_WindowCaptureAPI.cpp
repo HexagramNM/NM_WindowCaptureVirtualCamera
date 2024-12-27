@@ -13,6 +13,13 @@ NM_WindowCapture* createWindowCaptureObject(HWND baseHwnd)
 	return result;
 }
 
+void copyCapturePreviewToDXGIResource(NM_WindowCapture* captureWindowObj, void* resourcePtr) {
+	if (captureWindowObj != nullptr)
+	{
+		captureWindowObj->CopyCapturePreviewToDXGIResource(resourcePtr);
+	}
+}
+
 void openWindowPicker(NM_WindowCapture* captureWindowObj)
 {
 	if (captureWindowObj != nullptr)
@@ -34,7 +41,6 @@ void startVirtualCamera(NM_WindowCapture* captureWindowObj)
 	if (captureWindowObj != nullptr)
 	{
 		captureWindowObj->CreateSharedCaptureWindowTexture();
-		captureWindowObj->ChangeWindow();
 		captureWindowObj->CreateVirtualCamera();
 	}
 }
@@ -52,7 +58,6 @@ void stopVirtualCamera(NM_WindowCapture* captureWindowObj)
 	if (captureWindowObj != nullptr)
 	{
 		captureWindowObj->StopVirtualCamera();
-		captureWindowObj->StopCapture();
 		captureWindowObj->CloseSharedCaptureWindowTextureHandle();
 	}
 }

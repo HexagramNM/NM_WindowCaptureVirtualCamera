@@ -6,6 +6,8 @@ extern "C" __declspec(dllexport) void startupForMF();
 
 extern "C" __declspec(dllexport) NM_WindowCapture *createWindowCaptureObject(HWND baseHwnd);
 
+extern "C" __declspec(dllexport) void copyCapturePreviewToDXGIResource(NM_WindowCapture* captureWindowObj, void* resourcePtr);
+
 extern "C" __declspec(dllexport) void openWindowPicker(NM_WindowCapture* windowCaptureObj);
 
 extern "C" __declspec(dllexport) void setTargetWindowForCapture(NM_WindowCapture* windowCaptureObj, HWND hwnd);

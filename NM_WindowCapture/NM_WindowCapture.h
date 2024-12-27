@@ -35,14 +35,14 @@ public:
 		_framePoolForCapture(nullptr),
 		_captureSession(nullptr),
 		_sharedCaptureWindowHandle(nullptr),
-		_previewHandle(nullptr),
 		_reverseWindow(false)
 	{
 		_capWinSize.Width = 1;
 		_capWinSize.Height = 1;
 		CreateDirect3DDeviceForCapture();
-		CreatePreviewTexture();
+		CreateCapturePreviewTexture();
 		SetupOffscreenRendering();
+		DrawCapturePreview();
 	}
 
 	~NM_WindowCapture()
@@ -51,7 +51,7 @@ public:
 		StopCapture();
 		_graphicsCaptureItem = nullptr;
 		CloseSharedCaptureWindowTextureHandle();
-		ClosePreviewTexture();
+		CloseCapturePreviewTexture();
 	}
 
 	void CreateVirtualCamera();
@@ -59,13 +59,14 @@ public:
 	void SwitchReverseCamera();
 
 	void CreateDirect3DDeviceForCapture();
-	void CreatePreviewTexture();
-	void ClosePreviewTexture();
+	void CreateCapturePreviewTexture();
+	void CloseCapturePreviewTexture();
 	void CreateSharedCaptureWindowTexture();
 	void CloseSharedCaptureWindowTextureHandle();
 	void SetupOffscreenRendering();
-	void DrawPreview();
+	void DrawCapturePreview();
 	void DrawSharedCaptureWindow();
+	void CopyCapturePreviewToDXGIResource(void* resourcePtr);
 
 	bool IsCapturing();
 	void StopCapture();
@@ -92,11 +93,10 @@ private:
 	com_ptr<ID3D11Texture2D> _sharedCaptureWindowTexture;
 	HANDLE _sharedCaptureWindowHandle;
 
-	com_ptr<ID3D11Texture2D> _previewTexture;
-	HANDLE _previewHandle;
+	com_ptr<ID3D11Texture2D> _capturePreviewTexture;
 
 	com_ptr<ID3D11RenderTargetView> _renderTargetViewForSharedCaptureWindow;
-	com_ptr<ID3D11RenderTargetView> _renderTargetViewForPreview;
+	com_ptr<ID3D11RenderTargetView> _renderTargetViewForCapturePreview;
 	com_ptr<ID3D11ShaderResourceView> _shaderResourceView;
 	com_ptr<ID3D11VertexShader> _spriteVS;
 	com_ptr<ID3D11PixelShader> _spritePS;
@@ -116,4 +116,5 @@ private:
 	GraphicsCaptureSession _captureSession;
 
 	std::mutex _sharedCaptureWindowLock;
+	std::mutex _capturePreviewLock;
 };

@@ -3,6 +3,12 @@
 
 現在、工事中です
 
+
+# 依存関係
+
+nuget経由で[WPFDXInterop](https://github.com/microsoft/WPFDXInterop)を導入しています。
+
+
 # ビルド方法
 
 1. このリポジトリをクローンします。

@@ -14,6 +14,9 @@ namespace NM_WindowCaptureVirtualCamera
             internal static extern IntPtr createWindowCaptureObject(IntPtr baseHwnd);
 
             [DllImport("NM_WindowCapture.dll")]
+            internal static extern void copyCapturePreviewToDXGIResource(IntPtr captureWindowObj, IntPtr resourcePtr);
+
+            [DllImport("NM_WindowCapture.dll")]
             internal static extern void openWindowPicker(IntPtr captureWindowObj);
 
             [DllImport("NM_WindowCapture.dll")]
@@ -43,6 +46,15 @@ namespace NM_WindowCaptureVirtualCamera
         public static IntPtr createWindowCaptureObject(IntPtr baseHwnd)
         {
             return NativeMethods.createWindowCaptureObject(baseHwnd);
+        }
+
+        public static void copyCapturePreviewToDXGIResource(IntPtr captureWindowObj, IntPtr resourcePtr)
+        {
+            if (captureWindowObj == IntPtr.Zero || resourcePtr == IntPtr.Zero)
+            {
+                return;
+            }
+            NativeMethods.copyCapturePreviewToDXGIResource(captureWindowObj, resourcePtr);
         }
 
         public static void openWindowPicker(IntPtr captureWindowObj)

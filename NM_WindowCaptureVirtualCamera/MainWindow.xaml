@@ -5,15 +5,15 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:NM_WindowCaptureVirtualCamera"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800"
+        Title="NM_WindowCaptureVirtualCamera" Height="450" Width="800"
 		MinHeight="360" MinWidth="640"
 		MaxHeight="675" MaxWidth="1200" Closed="Window_Closed" Loaded="Window_Loaded">
 	<Grid>
-		<Image Margin="10,10,150,10"/>
-		<Button x:Name="button_picker" Content="ウィンドウ選択" Margin="0,10,10,0" VerticalAlignment="Top" Height="40" FontSize="20" Click="button_picker_Click" HorizontalAlignment="Right" Width="130"/>
-		<Button x:Name="button_cameraStart" Content="カメラ起動" Margin="0,60,10,0" VerticalAlignment="Top" Height="40" FontSize="20" Click="button_cameraStart_Click" HorizontalAlignment="Right" Width="130"/>
-		<Button x:Name="button_cameraReverse" Content="カメラ反転" Margin="0,110,10,0" VerticalAlignment="Top" Height="40" FontSize="20" Click="button_cameraReverse_Click" HorizontalAlignment="Right" Width="130"/>
-		<Button x:Name="button_cameraStop" Content="カメラ停止" Margin="0,160,10,0" VerticalAlignment="Top" Height="40" FontSize="20" Click="button_cameraStop_Click" HorizontalAlignment="Right" Width="130"/>
+		<Image x:Name="image_windowPreview" Margin="10,10,150,10"/>
+		<Button x:Name="button_picker" Content="ウィンドウ選択" Margin="0,10,10,0" VerticalAlignment="Top" Height="40" FontSize="20" Click="Button_picker_Click" HorizontalAlignment="Right" Width="130"/>
+		<Button x:Name="button_cameraStart" Content="カメラ起動" Margin="0,60,10,0" VerticalAlignment="Top" Height="40" FontSize="20" Click="Button_cameraStart_Click" HorizontalAlignment="Right" Width="130"/>
+		<Button x:Name="button_cameraReverse" Content="カメラ反転" Margin="0,110,10,0" VerticalAlignment="Top" Height="40" FontSize="20" Click="Button_cameraReverse_Click" HorizontalAlignment="Right" Width="130" IsEnabled="False"/>
+		<Button x:Name="button_cameraStop" Content="カメラ停止" Margin="0,160,10,0" VerticalAlignment="Top" Height="40" FontSize="20" Click="Button_cameraStop_Click" HorizontalAlignment="Right" Width="130" IsEnabled="False"/>
 
 	</Grid>
 </Window>
