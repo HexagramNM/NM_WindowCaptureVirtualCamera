@@ -32,9 +32,56 @@ void NM_WindowCapture::CreateVirtualCamera()
 	}
 }
 
-void NM_WindowCapture::SwitchReverseCamera()
+void NM_WindowCapture::SetLeftMargin(int margin) 
 {
-	_reverseWindow = !_reverseWindow;
+	if (margin < 0) {
+		_leftMargin = 0;
+	}
+	else if (margin >= _capWinSize.Width - _rightMargin) {
+		_leftMargin = _capWinSize.Width - _rightMargin - 1;
+	}
+	else {
+		_leftMargin = margin;
+	}
+}
+
+void NM_WindowCapture::SetRightMargin(int margin) 
+{
+	if (margin < 0) {
+		_rightMargin = 0;
+	}
+	else if (margin >= _capWinSize.Width - _leftMargin) {
+		_rightMargin = _capWinSize.Width - _leftMargin - 1;
+	}
+	else {
+		_rightMargin = margin;
+	}
+}
+
+void NM_WindowCapture::SetTopMargin(int margin)
+{
+	if (margin < 0) {
+		_topMargin = 0;
+	}
+	else if (margin >= _capWinSize.Height - _bottomMargin) {
+		_topMargin = _capWinSize.Height - _bottomMargin - 1;
+	}
+	else {
+		_topMargin = margin;
+	}
+}
+
+void NM_WindowCapture::SetBottomMargin(int margin)
+{
+	if (margin < 0) {
+		_bottomMargin = 0;
+	}
+	else if (margin >= _capWinSize.Height - _topMargin) {
+		_bottomMargin = _capWinSize.Height - _topMargin - 1;
+	}
+	else {
+		_bottomMargin = margin;
+	}
 }
 
 void NM_WindowCapture::StopVirtualCamera()
@@ -313,8 +360,8 @@ void NM_WindowCapture::DrawSharedCaptureWindow() {
 	float xPosRate = 1.0f;
 	float yPosRate = 1.0f;
 	float rectRate = static_cast<float>(VCAM_VIDEO_WIDTH) / static_cast<float>(VCAM_VIDEO_HEIGHT);
-	float floatWindowWidth = static_cast<float>(_capWinSize.Width);
-	float floatWindowHeight = static_cast<float>(_capWinSize.Height);
+	float floatWindowWidth = static_cast<float>(_capWinSize.Width - _leftMargin - _rightMargin);
+	float floatWindowHeight = static_cast<float>(_capWinSize.Height - _topMargin - _bottomMargin);
 
 	if (floatWindowWidth > floatWindowHeight * rectRate) {
 		yPosRate = floatWindowHeight * rectRate / floatWindowWidth;
@@ -323,17 +370,24 @@ void NM_WindowCapture::DrawSharedCaptureWindow() {
 		xPosRate = floatWindowWidth / (floatWindowHeight * rectRate);
 	}
 
-	_polygonVertex[0] = { {-xPosRate, yPosRate, 0.0f}, {0.0f, 0.0f} };
-	_polygonVertex[1] = { {xPosRate, yPosRate, 0.0f}, {1.0f, 0.0f} };
-	_polygonVertex[2] = { {-xPosRate, -yPosRate, 0.0f}, {0.0f, 1.0f} };
-	_polygonVertex[3] = { {xPosRate, -yPosRate, 0.0f}, {1.0f, 1.0f} };
+	float invFloatWindowWidth = 1.0f / static_cast<float>(_capWinSize.Width);
+	float invFloatWindowHeight = 1.0f / static_cast<float>(_capWinSize.Height);
+	float xTexMin = static_cast<float>(_leftMargin) * invFloatWindowWidth;
+	float xTexMax = 1.0f - static_cast<float>(_rightMargin) * invFloatWindowWidth;
+	float yTexMin = static_cast<float>(_topMargin) * invFloatWindowHeight;
+	float yTexMax = 1.0f - static_cast<float>(_bottomMargin) * invFloatWindowHeight;
+
+	_polygonVertex[0] = { {-xPosRate, yPosRate, 0.0f}, {xTexMin, yTexMin} };
+	_polygonVertex[1] = { {xPosRate, yPosRate, 0.0f}, {xTexMax, yTexMin} };
+	_polygonVertex[2] = { {-xPosRate, -yPosRate, 0.0f}, {xTexMin, yTexMax} };
+	_polygonVertex[3] = { {xPosRate, -yPosRate, 0.0f}, {xTexMax, yTexMax} };
 
 	// 左右反転
 	if (_reverseWindow) {
-		_polygonVertex[0].Tex.x = 1.0f;
-		_polygonVertex[1].Tex.x = 0.0f;
-		_polygonVertex[2].Tex.x = 1.0f;
-		_polygonVertex[3].Tex.x = 0.0f;
+		_polygonVertex[0].Tex.x = xTexMax;
+		_polygonVertex[1].Tex.x = xTexMin;
+		_polygonVertex[2].Tex.x = xTexMax;
+		_polygonVertex[3].Tex.x = xTexMin;
 	}
 
 	_dxDeviceContext->UpdateSubresource(_vertexBuffer.get(), 0, nullptr, _polygonVertex, 0, 0);
@@ -412,6 +466,12 @@ void NM_WindowCapture::ChangeWindow() {
 		StopCapture();
 	}
 
+	_leftMargin = 0;
+	_rightMargin = 0;
+	_topMargin = 0;
+	_bottomMargin = 0;
+	_frameCount = 0;
+
 	_capWinSize = _graphicsCaptureItem.Size();
 	_framePoolForCapture = Direct3D11CaptureFramePool::CreateFreeThreaded(_dxDeviceForCapture, 
 		DirectXPixelFormat::B8G8R8A8UIntNormalized, 2, _capWinSize);
@@ -456,6 +516,9 @@ winrt::Windows::Foundation::IAsyncAction NM_WindowCapture::OpenWindowPicker()
 void NM_WindowCapture::OnFrameArrived(Direct3D11CaptureFramePool const& sender,
 	winrt::Windows::Foundation::IInspectable const& args)
 {
+	if (_frameCount == 0) {
+		_startTime = std::chrono::system_clock::now();
+	}
 	auto frame = sender.TryGetNextFrame();
 
 	SizeInt32 itemSize = frame.ContentSize();
@@ -469,6 +532,22 @@ void NM_WindowCapture::OnFrameArrived(Direct3D11CaptureFramePool const& sender,
 	if (itemSize.Width != _capWinSize.Width
 		|| itemSize.Height != _capWinSize.Height) {
 		_capWinSize = itemSize;
+
+		float rate = 0.0f;
+		int overMargin = (_leftMargin + _rightMargin) - _capWinSize.Width;
+		if (overMargin > 0) {
+			rate = static_cast<float>(_leftMargin) / static_cast<float>(_leftMargin + _rightMargin);
+			_leftMargin -= static_cast<int>(static_cast<float>(overMargin) * rate + 0.5f);
+			_rightMargin -= static_cast<int>(static_cast<float>(overMargin) * (1.0f - rate) + 0.5f);
+		}
+
+		overMargin = (_topMargin + _bottomMargin) - _capWinSize.Height;
+		if (overMargin > 0) {
+			rate = static_cast<float>(_topMargin) / static_cast<float>(_topMargin + _bottomMargin);
+			_topMargin -= static_cast<int>(static_cast<float>(overMargin) * rate + 0.5f);
+			_bottomMargin -= static_cast<int>(static_cast<float>(overMargin) * (1.0f - rate) + 0.5f);
+		}
+
 		_framePoolForCapture.Recreate(_dxDeviceForCapture,
 			DirectXPixelFormat::B8G8R8A8UIntNormalized, 2, _capWinSize);
 	}
@@ -480,8 +559,18 @@ void NM_WindowCapture::OnFrameArrived(Direct3D11CaptureFramePool const& sender,
 	ID3D11ShaderResourceView* tempShaderResourceViewPtr[] = { _shaderResourceView.get() };
 	_dxDeviceContext->PSSetShaderResources(0, 1, tempShaderResourceViewPtr);
 	
-	DrawCapturePreview();
+	if (_enabledCapturePreview) {
+		DrawCapturePreview();
+	}
 	DrawSharedCaptureWindow();
+
+	_frameCount++;
+	if (_frameCount >= FPS_MAX_FRAME) {
+		std::chrono::system_clock::time_point endTime = std::chrono::system_clock::now();
+		_captureFPS = static_cast<float>(_frameCount) / 
+			(static_cast<float>(std::chrono::duration_cast<std::chrono::milliseconds>(endTime - _startTime).count()) * 0.001f);
+		_frameCount = 0;
+	}
 }
 /****************************************************************/
 /*  winRT GraphicsCapture Function End                          */

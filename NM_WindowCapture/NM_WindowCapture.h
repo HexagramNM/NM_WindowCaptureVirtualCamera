@@ -12,6 +12,7 @@
 #include <Windows.Graphics.Capture.Interop.h>
 #include <mfvirtualcamera.h>
 #include <mutex>
+#include <chrono>
 
 #include "../global_config.h"
 
@@ -35,7 +36,14 @@ public:
 		_framePoolForCapture(nullptr),
 		_captureSession(nullptr),
 		_sharedCaptureWindowHandle(nullptr),
-		_reverseWindow(false)
+		_reverseWindow(false),
+		_enabledCapturePreview(false),
+		_leftMargin(0),
+	    _rightMargin(0),
+	    _topMargin(0),
+	    _bottomMargin(0),
+		_captureFPS(0.0f),
+		_frameCount(0)
 	{
 		_capWinSize.Width = 1;
 		_capWinSize.Height = 1;
@@ -55,8 +63,17 @@ public:
 	}
 
 	void CreateVirtualCamera();
+	void SwitchReverseCamera() { _reverseWindow = !_reverseWindow; }
+	void SetLeftMargin(int margin);
+	void SetRightMargin(int margin);
+	void SetTopMargin(int margin);
+	void SetBottomMargin(int margin);
+	int GetLeftMargin() { return _leftMargin; }
+	int GetRightMargin() { return _rightMargin; }
+	int GetTopMargin() { return _topMargin; }
+	int GetBottomMargin() { return _bottomMargin; }
+	void SetEnabledCapturePreview(bool enabled) { _enabledCapturePreview = enabled; }
 	void StopVirtualCamera();
-	void SwitchReverseCamera();
 
 	void CreateDirect3DDeviceForCapture();
 	void CreateCapturePreviewTexture();
@@ -69,6 +86,9 @@ public:
 	void CopyCapturePreviewToDXGIResource(void* resourcePtr);
 
 	bool IsCapturing();
+	int GetCaptureWindowWidth() { return _capWinSize.Width; }
+	int GetCaptureWindowHeight() { return _capWinSize.Height; }
+	float GetCaptureFPS() { return _captureFPS; }
 	void StopCapture();
 	void ChangeWindow();
 	winrt::Windows::Foundation::IAsyncAction OpenWindowPicker();
@@ -78,6 +98,7 @@ public:
 
 private:
 	static constexpr DXGI_FORMAT _dxgiFormat = DXGI_FORMAT_B8G8R8A8_UNORM;
+	static constexpr int FPS_MAX_FRAME = 60;
 
 	struct VertexType
 	{
@@ -108,6 +129,15 @@ private:
 
 	SizeInt32 _capWinSize;
 	bool _reverseWindow;
+	bool _enabledCapturePreview;
+	int _leftMargin;
+	int _rightMargin;
+	int _topMargin;
+	int _bottomMargin;
+
+	float _captureFPS;
+	int _frameCount;
+	std::chrono::system_clock::time_point _startTime;
 
 	IDirect3DDevice _dxDeviceForCapture;
 	GraphicsCaptureItem _graphicsCaptureItem;
