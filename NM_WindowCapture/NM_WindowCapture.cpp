@@ -510,6 +510,7 @@ winrt::Windows::Foundation::IAsyncAction NM_WindowCapture::OpenWindowPicker()
 		_graphicsCaptureItem = pickerResult;
 	}
 
+	SetWindowDisplayAffinity(_baseHwnd, WDA_NONE);
 	ChangeWindow();
 }
 
