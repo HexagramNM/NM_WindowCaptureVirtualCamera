@@ -6,37 +6,37 @@
         xmlns:local="clr-namespace:NM_WindowCaptureVirtualCamera"
         mc:Ignorable="d"
         Title="NM_WindowCaptureVirtualCamera" Height="450" Width="800"
-		MinHeight="360" MinWidth="640"
-		MaxHeight="675" MaxWidth="1200" Closed="Window_Closed" Loaded="Window_Loaded">
-	<Grid>
-		<Image x:Name="image_windowPreview" Margin="10,10,150,60"/>
-		<Button x:Name="button_picker" Content="ウィンドウ選択" Margin="0,10,10,0" VerticalAlignment="Top" Height="40" FontSize="20" Click="Button_picker_Click" HorizontalAlignment="Right" Width="130"/>
-		<Button x:Name="button_cameraStart" Content="カメラ起動" Margin="0,60,10,0" VerticalAlignment="Top" Height="40" FontSize="20" Click="Button_cameraStart_Click" HorizontalAlignment="Right" Width="130"/>
-		<Button x:Name="button_cameraReverse" Content="カメラ反転" Margin="0,110,10,0" VerticalAlignment="Top" Height="40" FontSize="20" Click="Button_cameraReverse_Click" HorizontalAlignment="Right" Width="130" IsEnabled="False"/>
-		<Button x:Name="button_cameraStop" Content="カメラ停止" Margin="0,160,10,0" VerticalAlignment="Top" Height="40" FontSize="20" Click="Button_cameraStop_Click" HorizontalAlignment="Right" Width="130" IsEnabled="False"/>
-		<Viewbox Margin="10,10,150,60" Stretch="Uniform">
-			<Canvas x:Name="canvas_windowPreview" Width="640" Height="360">
-				<Rectangle x:Name="rectangle_range" Width="100" Height="100" Stroke="Red" StrokeThickness="3" Canvas.Left="270" Canvas.Top="130"/>
-				<Rectangle x:Name="rectangle_exclude" Width="640" Height="360" Fill="#7F7F7F7F">
-					<Rectangle.OpacityMask>
-						<VisualBrush Viewbox="0,0,640,360" Stretch="None" ViewboxUnits="Absolute">
-							<VisualBrush.Visual>
-								<Canvas Width="640" Height="360" >
-									<Rectangle x:Name="rectangle_topMargin" Width="640" Height="130" Fill="Black"/>
-									<Rectangle x:Name="rectangle_bottomMargin" Width="640" Height="130" Canvas.Bottom="0" Fill="Black"/>
-									<Rectangle x:Name="rectangle_leftMargin" Width="270" Height="360" Fill="Black"/>
-									<Rectangle x:Name="rectangle_rightMargin" Width="270" Height="360" Canvas.Right="0" Fill="Black"/>
-								</Canvas>
-							</VisualBrush.Visual>
-						</VisualBrush>
-					</Rectangle.OpacityMask>
-				</Rectangle>
-			</Canvas>
-		</Viewbox>
-		<Button x:Name="button_trimmingReset" Content="トリミングリセット" Margin="10,0,0,10" FontSize="20" Click="Button_trimmingReset_Click" HorizontalAlignment="Left" Width="150" Height="40" VerticalAlignment="Bottom"/>
-		<Label Content="Capture FPS: " Margin="0,0,80,10" FontSize="25" Height="40" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="150"/>
-		<Label x:Name="label_captureFPS" Content="0.0" Margin="0,0,10,10" FontSize="25" Height="40" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="70"/>
-		<Rectangle Fill="#00000000" Margin="0,0,140,50" MouseLeftButtonDown="Canvas_windowPreview_MouseLeftButtonDown" Panel.ZIndex="1"/>
+        MinHeight="360" MinWidth="640"
+        MaxHeight="675" MaxWidth="1200" Closed="Window_Closed" Loaded="Window_Loaded">
+    <Grid>
+        <Image x:Name="image_windowPreview" Margin="10,10,150,60"/>
+        <Button x:Name="button_picker" Content="ウィンドウ選択" Margin="0,10,10,0" VerticalAlignment="Top" Height="40" FontSize="20" Click="Button_picker_Click" HorizontalAlignment="Right" Width="130"/>
+        <Button x:Name="button_cameraStart" Content="カメラ起動" Margin="0,60,10,0" VerticalAlignment="Top" Height="40" FontSize="20" Click="Button_cameraStart_Click" HorizontalAlignment="Right" Width="130"/>
+        <Button x:Name="button_cameraReverse" Content="カメラ反転" Margin="0,110,10,0" VerticalAlignment="Top" Height="40" FontSize="20" Click="Button_cameraReverse_Click" HorizontalAlignment="Right" Width="130" IsEnabled="False"/>
+        <Button x:Name="button_cameraStop" Content="カメラ停止" Margin="0,160,10,0" VerticalAlignment="Top" Height="40" FontSize="20" Click="Button_cameraStop_Click" HorizontalAlignment="Right" Width="130" IsEnabled="False"/>
+        <Viewbox Margin="10,10,150,60" Stretch="Uniform">
+            <Canvas x:Name="canvas_windowPreview" Width="640" Height="360">
+                <Rectangle x:Name="rectangle_range" Width="100" Height="100" Stroke="Red" StrokeThickness="3" Canvas.Left="270" Canvas.Top="130"/>
+                <Rectangle x:Name="rectangle_exclude" Width="640" Height="360" Fill="#7F7F7F7F">
+                    <Rectangle.OpacityMask>
+                        <VisualBrush Viewbox="0,0,640,360" Stretch="None" ViewboxUnits="Absolute">
+                            <VisualBrush.Visual>
+                                <Canvas Width="640" Height="360" >
+                                    <Rectangle x:Name="rectangle_topMargin" Width="640" Height="130" Fill="Black"/>
+                                    <Rectangle x:Name="rectangle_bottomMargin" Width="640" Height="130" Canvas.Bottom="0" Fill="Black"/>
+                                    <Rectangle x:Name="rectangle_leftMargin" Width="270" Height="360" Fill="Black"/>
+                                    <Rectangle x:Name="rectangle_rightMargin" Width="270" Height="360" Canvas.Right="0" Fill="Black"/>
+                                </Canvas>
+                            </VisualBrush.Visual>
+                        </VisualBrush>
+                    </Rectangle.OpacityMask>
+                </Rectangle>
+            </Canvas>
+        </Viewbox>
+        <Button x:Name="button_trimmingReset" Content="トリミングリセット" Margin="10,0,0,10" FontSize="20" Click="Button_trimmingReset_Click" HorizontalAlignment="Left" Width="150" Height="40" VerticalAlignment="Bottom"/>
+        <Label Content="Capture FPS: " Margin="0,0,80,10" FontSize="25" Height="40" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="150"/>
+        <Label x:Name="label_captureFPS" Content="0.0" Margin="0,0,10,10" FontSize="25" Height="40" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="70"/>
+        <Rectangle Fill="#00000000" Margin="0,0,140,50" MouseLeftButtonDown="Canvas_windowPreview_MouseLeftButtonDown" Panel.ZIndex="1"/>
 
-	</Grid>
+    </Grid>
 </Window>

@@ -44,8 +44,8 @@ namespace NM_WindowCaptureVirtualCamera
             InitializeComponent();
 
             windowPreview = new D3D11Image();
-            int previewWidth = NM_WindowCapture.getCapturePreviewWidth();
-            int previewHeight = NM_WindowCapture.getCapturePreviewHeight();
+            int previewWidth = NM_WindowCapture.GetCapturePreviewWidth();
+            int previewHeight = NM_WindowCapture.GetCapturePreviewHeight();
             windowPreview.SetPixelSize(previewWidth, previewHeight);
             image_windowPreview.Source = windowPreview;
         }
@@ -53,8 +53,8 @@ namespace NM_WindowCaptureVirtualCamera
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             var helper = new System.Windows.Interop.WindowInteropHelper(this);
-            captureObj = NM_WindowCapture.createWindowCaptureObject(helper.Handle);
-            NM_WindowCapture.setEnabledCapturePreview(captureObj, true);
+            captureObj = NM_WindowCapture.CreateWindowCaptureObject(helper.Handle);
+            NM_WindowCapture.SetEnabledCapturePreview(captureObj, true);
             windowPreview.WindowOwner = helper.Handle;
             windowPreview.OnRender += PreviewWindow_OnRender;
             CompositionTarget.Rendering += CompositionTarget_Render;
@@ -64,7 +64,7 @@ namespace NM_WindowCaptureVirtualCamera
 
         private void DrawRectangleRange()
         {
-            bool isCapturing = NM_WindowCapture.isCapturing(captureObj);
+            bool isCapturing = NM_WindowCapture.IsCapturing(captureObj);
             Visibility visibleStatus = Visibility.Visible;
             if (isCapturing)
             {
@@ -72,13 +72,13 @@ namespace NM_WindowCaptureVirtualCamera
                 double previewHeight = canvas_windowPreview.Height;
                 double rate = previewWidth / previewHeight;
 
-                double captureWindowWidth = NM_WindowCapture.getCaptureWindowWidth(captureObj);
-                double captureWindowHeight = NM_WindowCapture.getCaptureWindowHeight(captureObj);
+                double captureWindowWidth = NM_WindowCapture.GetCaptureWindowWidth(captureObj);
+                double captureWindowHeight = NM_WindowCapture.GetCaptureWindowHeight(captureObj);
 
-                double leftMargin = NM_WindowCapture.getLeftMargin(captureObj);
-                double rightMargin = NM_WindowCapture.getRightMargin(captureObj);
-                double topMargin = NM_WindowCapture.getTopMargin(captureObj);
-                double bottomMargin = NM_WindowCapture.getBottomMargin(captureObj);
+                double leftMargin = NM_WindowCapture.GetLeftMargin(captureObj);
+                double rightMargin = NM_WindowCapture.GetRightMargin(captureObj);
+                double topMargin = NM_WindowCapture.GetTopMargin(captureObj);
+                double bottomMargin = NM_WindowCapture.GetBottomMargin(captureObj);
 
                 if (captureWindowHeight * rate > captureWindowWidth)
                 {
@@ -109,7 +109,8 @@ namespace NM_WindowCaptureVirtualCamera
                     rectangle_range.Height = previewHeight - ((topMargin + bottomMargin) * scale + heightSpace);
                 }
             }
-            else {
+            else 
+            {
                 visibleStatus = Visibility.Hidden;
             }
 
@@ -119,42 +120,42 @@ namespace NM_WindowCaptureVirtualCamera
 
         private void Button_picker_Click(object sender, RoutedEventArgs e)
         {
-            NM_WindowCapture.openWindowPicker(captureObj);
+            NM_WindowCapture.OpenWindowPicker(captureObj);
         }
 
         private void Button_trimmingReset_Click(object sender, RoutedEventArgs e)
         {
-            NM_WindowCapture.setLeftMargin(captureObj, 0);
-            NM_WindowCapture.setRightMargin(captureObj, 0);
-            NM_WindowCapture.setTopMargin(captureObj, 0);
-            NM_WindowCapture.setBottomMargin(captureObj, 0);
+            NM_WindowCapture.SetLeftMargin(captureObj, 0);
+            NM_WindowCapture.SetRightMargin(captureObj, 0);
+            NM_WindowCapture.SetTopMargin(captureObj, 0);
+            NM_WindowCapture.SetBottomMargin(captureObj, 0);
         }
 
         private void Button_cameraStart_Click(object sender, RoutedEventArgs e)
         {
-            NM_WindowCapture.startVirtualCamera(captureObj);
+            NM_WindowCapture.StartVirtualCamera(captureObj);
             enableVCam = true;
         }
 
         private void Button_cameraReverse_Click(object sender, RoutedEventArgs e)
         {
-            NM_WindowCapture.switchReverseCaptureWindow(captureObj);
+            NM_WindowCapture.SwitchReverseCaptureWindow(captureObj);
         }
 
         private void Button_cameraStop_Click(object sender, RoutedEventArgs e)
         {
-            NM_WindowCapture.stopVirtualCamera(captureObj);
+            NM_WindowCapture.StopVirtualCamera(captureObj);
             enableVCam = false;
         }
 
         private void PreviewWindow_OnRender(nint resourcePtr, bool isNewSurface)
         {
-            NM_WindowCapture.copyCapturePreviewToDXGIResource(captureObj, resourcePtr);
+            NM_WindowCapture.CopyCapturePreviewToDXGIResource(captureObj, resourcePtr);
         }
 
         private Point ConvertPositionToWindowCoordinate(Point pos)
         {
-            bool isCapturing = NM_WindowCapture.isCapturing(captureObj);
+            bool isCapturing = NM_WindowCapture.IsCapturing(captureObj);
             if (!isCapturing)
             {
                 return new Point(0.0, 0.0);
@@ -165,13 +166,13 @@ namespace NM_WindowCaptureVirtualCamera
             double previewHeight = canvas_windowPreview.Height;
             double rate = previewWidth / previewHeight;
 
-            double captureWindowWidth = NM_WindowCapture.getCaptureWindowWidth(captureObj);
-            double captureWindowHeight = NM_WindowCapture.getCaptureWindowHeight(captureObj);
+            double captureWindowWidth = NM_WindowCapture.GetCaptureWindowWidth(captureObj);
+            double captureWindowHeight = NM_WindowCapture.GetCaptureWindowHeight(captureObj);
 
-            double leftMargin = NM_WindowCapture.getLeftMargin(captureObj);
-            double rightMargin = NM_WindowCapture.getRightMargin(captureObj);
-            double topMargin = NM_WindowCapture.getTopMargin(captureObj);
-            double bottomMargin = NM_WindowCapture.getBottomMargin(captureObj);
+            double leftMargin = NM_WindowCapture.GetLeftMargin(captureObj);
+            double rightMargin = NM_WindowCapture.GetRightMargin(captureObj);
+            double topMargin = NM_WindowCapture.GetTopMargin(captureObj);
+            double bottomMargin = NM_WindowCapture.GetBottomMargin(captureObj);
 
             if (captureWindowHeight * rate > captureWindowWidth)
             {
@@ -199,12 +200,12 @@ namespace NM_WindowCaptureVirtualCamera
             bottomFlag = false;
             boxFlag = false;
 
-            double currentLeftMargin = NM_WindowCapture.getLeftMargin(captureObj);
-            double currentRightMargin = NM_WindowCapture.getRightMargin(captureObj);
-            double currentTopMargin = NM_WindowCapture.getTopMargin(captureObj);
-            double currentBottomMargin = NM_WindowCapture.getBottomMargin(captureObj);
-            double captureWindowWidth = NM_WindowCapture.getCaptureWindowWidth(captureObj);
-            double captureWindowHeight = NM_WindowCapture.getCaptureWindowHeight(captureObj);
+            double currentLeftMargin = NM_WindowCapture.GetLeftMargin(captureObj);
+            double currentRightMargin = NM_WindowCapture.GetRightMargin(captureObj);
+            double currentTopMargin = NM_WindowCapture.GetTopMargin(captureObj);
+            double currentBottomMargin = NM_WindowCapture.GetBottomMargin(captureObj);
+            double captureWindowWidth = NM_WindowCapture.GetCaptureWindowWidth(captureObj);
+            double captureWindowHeight = NM_WindowCapture.GetCaptureWindowHeight(captureObj);
 
             double previewWidth = canvas_windowPreview.Width;
             double previewHeight = canvas_windowPreview.Height;
@@ -256,10 +257,10 @@ namespace NM_WindowCaptureVirtualCamera
         {
             Point mousePosInCaptureWindow = ConvertPositionToWindowCoordinate(e.GetPosition(canvas_windowPreview));
 
-            previousLeftMargin = NM_WindowCapture.getLeftMargin(captureObj);
-            previousRightMargin = NM_WindowCapture.getRightMargin(captureObj);
-            previousTopMargin = NM_WindowCapture.getTopMargin(captureObj);
-            previousBottomMargin = NM_WindowCapture.getBottomMargin(captureObj);
+            previousLeftMargin = NM_WindowCapture.GetLeftMargin(captureObj);
+            previousRightMargin = NM_WindowCapture.GetRightMargin(captureObj);
+            previousTopMargin = NM_WindowCapture.GetTopMargin(captureObj);
+            previousBottomMargin = NM_WindowCapture.GetBottomMargin(captureObj);
 
             GetRangeBoxFlagFromMousePos(mousePosInCaptureWindow, out leftMarginMoveFlag, out rightMarginMoveFlag,
                 out topMarginMoveFlag, out bottomMarginMoveFlag, out boxMoveFlag);
@@ -272,22 +273,22 @@ namespace NM_WindowCaptureVirtualCamera
         {
             if (leftMarginMoveFlag)
             {
-                NM_WindowCapture.setLeftMargin(captureObj, (int)(previousLeftMargin + (mousePosInCaptureWindow.X - previousMousePos.X)));
+                NM_WindowCapture.SetLeftMargin(captureObj, (int)(previousLeftMargin + (mousePosInCaptureWindow.X - previousMousePos.X)));
             }
 
             if (rightMarginMoveFlag)
             {
-                NM_WindowCapture.setRightMargin(captureObj, (int)(previousRightMargin - (mousePosInCaptureWindow.X - previousMousePos.X)));
+                NM_WindowCapture.SetRightMargin(captureObj, (int)(previousRightMargin - (mousePosInCaptureWindow.X - previousMousePos.X)));
             }
 
             if (topMarginMoveFlag)
             {
-                NM_WindowCapture.setTopMargin(captureObj, (int)(previousTopMargin + (mousePosInCaptureWindow.Y - previousMousePos.Y)));
+                NM_WindowCapture.SetTopMargin(captureObj, (int)(previousTopMargin + (mousePosInCaptureWindow.Y - previousMousePos.Y)));
             }
 
             if (bottomMarginMoveFlag)
             {
-                NM_WindowCapture.setBottomMargin(captureObj, (int)(previousBottomMargin - (mousePosInCaptureWindow.Y - previousMousePos.Y)));
+                NM_WindowCapture.SetBottomMargin(captureObj, (int)(previousBottomMargin - (mousePosInCaptureWindow.Y - previousMousePos.Y)));
             }
 
             if (boxMoveFlag)
@@ -302,8 +303,8 @@ namespace NM_WindowCaptureVirtualCamera
                     moveX = previousRightMargin;
                 }
 
-                NM_WindowCapture.setLeftMargin(captureObj, (int)(previousLeftMargin + moveX));
-                NM_WindowCapture.setRightMargin(captureObj, (int)(previousRightMargin - moveX));
+                NM_WindowCapture.SetLeftMargin(captureObj, (int)(previousLeftMargin + moveX));
+                NM_WindowCapture.SetRightMargin(captureObj, (int)(previousRightMargin - moveX));
 
                 double moveY = mousePosInCaptureWindow.Y - previousMousePos.Y;
                 if (moveY < -previousTopMargin)
@@ -315,14 +316,14 @@ namespace NM_WindowCaptureVirtualCamera
                     moveY = previousBottomMargin;
                 }
 
-                NM_WindowCapture.setTopMargin(captureObj, (int)(previousTopMargin + moveY));
-                NM_WindowCapture.setBottomMargin(captureObj, (int)(previousBottomMargin - moveY));
+                NM_WindowCapture.SetTopMargin(captureObj, (int)(previousTopMargin + moveY));
+                NM_WindowCapture.SetBottomMargin(captureObj, (int)(previousBottomMargin - moveY));
             }
         }
 
         private void ChangeCursorForRangeBox(Point mousePosInCaptureWindow)
         {
-            bool isCapturing = NM_WindowCapture.isCapturing(captureObj);
+            bool isCapturing = NM_WindowCapture.IsCapturing(captureObj);
             if (!isCapturing)
             {
                 Cursor = Cursors.Arrow;
@@ -401,10 +402,10 @@ namespace NM_WindowCaptureVirtualCamera
 
                 DrawRectangleRange();
 
-                float fps = NM_WindowCapture.getCaptureFPS(captureObj);
+                float fps = NM_WindowCapture.GetCaptureFPS(captureObj);
                 label_captureFPS.Content = fps.ToString("F1");
 
-                bool isCapturing = NM_WindowCapture.isCapturing(captureObj);
+                bool isCapturing = NM_WindowCapture.IsCapturing(captureObj);
                 button_cameraStart.IsEnabled = (!enableVCam && isCapturing);
                 button_cameraReverse.IsEnabled = (enableVCam && isCapturing);
                 button_cameraStop.IsEnabled = (enableVCam && isCapturing);
@@ -416,7 +417,7 @@ namespace NM_WindowCaptureVirtualCamera
 
         private void Window_Closed(object sender, EventArgs e)
         {
-            NM_WindowCapture.deleteWindowCaptureObject(captureObj);
+            NM_WindowCapture.DeleteWindowCaptureObject(captureObj);
         }
     }
 }

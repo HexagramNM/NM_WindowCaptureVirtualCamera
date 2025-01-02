@@ -8,284 +8,284 @@ namespace NM_WindowCaptureVirtualCamera
         private static class NativeMethods
         {
             [DllImport("NM_WindowCapture.dll")]
-            internal static extern void startupForMF();
+            internal static extern void StartupForMF();
 
             [DllImport("NM_WindowCapture.dll")]
-            internal static extern IntPtr createWindowCaptureObject(IntPtr baseHwnd);
+            internal static extern IntPtr CreateWindowCaptureObject(IntPtr baseHwnd);
 
             [DllImport("NM_WindowCapture.dll")]
-            internal static extern void copyCapturePreviewToDXGIResource(IntPtr captureWindowObj, IntPtr resourcePtr);
+            internal static extern void CopyCapturePreviewToDXGIResource(IntPtr captureWindowObj, IntPtr resourcePtr);
 
             [DllImport("NM_WindowCapture.dll")]
-            internal static extern void openWindowPicker(IntPtr captureWindowObj);
+            internal static extern void OpenWindowPicker(IntPtr captureWindowObj);
 
             [DllImport("NM_WindowCapture.dll")]
-            internal static extern void setTargetWindowForCapture(IntPtr captureWindowObj, IntPtr hwnd);
+            internal static extern void SetTargetWindowForCapture(IntPtr captureWindowObj, IntPtr hwnd);
 
             [DllImport("NM_WindowCapture.dll")]
-            internal static extern void startVirtualCamera(IntPtr captureWindowObj);
+            internal static extern void StartVirtualCamera(IntPtr captureWindowObj);
 
             [DllImport("NM_WindowCapture.dll")]
-            internal static extern void switchReverseCaptureWindow(IntPtr captureWindowObj);
+            internal static extern void SwitchReverseCaptureWindow(IntPtr captureWindowObj);
 
             [DllImport("NM_WindowCapture.dll")]
-            internal static extern void setLeftMargin(IntPtr captureWindowObj, int margin);
+            internal static extern void SetLeftMargin(IntPtr captureWindowObj, int margin);
 
             [DllImport("NM_WindowCapture.dll")]
-            internal static extern void setRightMargin(IntPtr captureWindowObj, int margin);
+            internal static extern void SetRightMargin(IntPtr captureWindowObj, int margin);
 
             [DllImport("NM_WindowCapture.dll")]
-            internal static extern void setTopMargin(IntPtr captureWindowObj, int margin);
+            internal static extern void SetTopMargin(IntPtr captureWindowObj, int margin);
 
             [DllImport("NM_WindowCapture.dll")]
-            internal static extern void setBottomMargin(IntPtr captureWindowObj, int margin);
+            internal static extern void SetBottomMargin(IntPtr captureWindowObj, int margin);
 
             [DllImport("NM_WindowCapture.dll")]
-            internal static extern int getLeftMargin(IntPtr captureWindowObj);
+            internal static extern int GetLeftMargin(IntPtr captureWindowObj);
 
             [DllImport("NM_WindowCapture.dll")]
-            internal static extern int getRightMargin(IntPtr captureWindowObj);
+            internal static extern int GetRightMargin(IntPtr captureWindowObj);
 
             [DllImport("NM_WindowCapture.dll")]
-            internal static extern int getTopMargin(IntPtr captureWindowObj);
+            internal static extern int GetTopMargin(IntPtr captureWindowObj);
 
             [DllImport("NM_WindowCapture.dll")]
-            internal static extern int getBottomMargin(IntPtr captureWindowObj);
+            internal static extern int GetBottomMargin(IntPtr captureWindowObj);
 
             [DllImport("NM_WindowCapture.dll")]
-            internal static extern void setEnabledCapturePreview(IntPtr captureWindowObj, bool enabled);
+            internal static extern void SetEnabledCapturePreview(IntPtr captureWindowObj, bool enabled);
 
             [DllImport("NM_WindowCapture.dll")]
-            internal static extern int getCapturePreviewWidth();
+            internal static extern int GetCapturePreviewWidth();
 
             [DllImport("NM_WindowCapture.dll")]
-            internal static extern int getCapturePreviewHeight();
+            internal static extern int GetCapturePreviewHeight();
 
             [DllImport("NM_WindowCapture.dll")]
-            internal static extern bool isCapturing(IntPtr captureWindowObj);
+            internal static extern bool IsCapturing(IntPtr captureWindowObj);
 
             [DllImport("NM_WindowCapture.dll")]
-            internal static extern int getCaptureWindowWidth(IntPtr captureWindowObj);
+            internal static extern int GetCaptureWindowWidth(IntPtr captureWindowObj);
 
             [DllImport("NM_WindowCapture.dll")]
-            internal static extern int getCaptureWindowHeight(IntPtr captureWindowObj);
+            internal static extern int GetCaptureWindowHeight(IntPtr captureWindowObj);
 
             [DllImport("NM_WindowCapture.dll")]
-            internal static extern float getCaptureFPS(IntPtr captureWindowObj);
+            internal static extern float GetCaptureFPS(IntPtr captureWindowObj);
 
             [DllImport("NM_WindowCapture.dll")]
-            internal static extern void stopVirtualCamera(IntPtr captureWindowObj);
+            internal static extern void StopVirtualCamera(IntPtr captureWindowObj);
 
             [DllImport("NM_WindowCapture.dll")]
-            internal static extern void deleteWindowCaptureObject(IntPtr captureWindowObj);
+            internal static extern void DeleteWindowCaptureObject(IntPtr captureWindowObj);
 
             [DllImport("NM_WindowCapture.dll")]
-            internal static extern void shutdownForMF();
+            internal static extern void ShutdownForMF();
         }
 
-        public static void startupForMF()
+        public static void StartupForMF()
         {
-            NativeMethods.startupForMF();
+            NativeMethods.StartupForMF();
         }
 
-        public static IntPtr createWindowCaptureObject(IntPtr baseHwnd)
+        public static IntPtr CreateWindowCaptureObject(IntPtr baseHwnd)
         {
-            return NativeMethods.createWindowCaptureObject(baseHwnd);
+            return NativeMethods.CreateWindowCaptureObject(baseHwnd);
         }
 
-        public static void copyCapturePreviewToDXGIResource(IntPtr captureWindowObj, IntPtr resourcePtr)
+        public static void CopyCapturePreviewToDXGIResource(IntPtr captureWindowObj, IntPtr resourcePtr)
         {
             if (captureWindowObj == IntPtr.Zero || resourcePtr == IntPtr.Zero)
             {
                 return;
             }
-            NativeMethods.copyCapturePreviewToDXGIResource(captureWindowObj, resourcePtr);
+            NativeMethods.CopyCapturePreviewToDXGIResource(captureWindowObj, resourcePtr);
         }
 
-        public static void openWindowPicker(IntPtr captureWindowObj)
+        public static void OpenWindowPicker(IntPtr captureWindowObj)
         {
             if (captureWindowObj == IntPtr.Zero)
             {
                 return;
             }
-            NativeMethods.openWindowPicker(captureWindowObj);
+            NativeMethods.OpenWindowPicker(captureWindowObj);
         }
 
-        public static void setTargetWindowForCapture(IntPtr captureWindowObj, IntPtr hwnd)
+        public static void SetTargetWindowForCapture(IntPtr captureWindowObj, IntPtr hwnd)
         {
             if (captureWindowObj == IntPtr.Zero)
             {
                 return;
             }
-            NativeMethods.setTargetWindowForCapture(captureWindowObj, hwnd);
+            NativeMethods.SetTargetWindowForCapture(captureWindowObj, hwnd);
         }
 
-        public static void startVirtualCamera(IntPtr captureWindowObj)
+        public static void StartVirtualCamera(IntPtr captureWindowObj)
         {
             if (captureWindowObj == IntPtr.Zero)
             {
                 return;
             }
-            NativeMethods.startVirtualCamera(captureWindowObj);
+            NativeMethods.StartVirtualCamera(captureWindowObj);
         }
 
-        public static void switchReverseCaptureWindow(IntPtr captureWindowObj)
+        public static void SwitchReverseCaptureWindow(IntPtr captureWindowObj)
         {
             if (captureWindowObj == IntPtr.Zero)
             {
                 return;
             }
-            NativeMethods.switchReverseCaptureWindow(captureWindowObj);
+            NativeMethods.SwitchReverseCaptureWindow(captureWindowObj);
         }
 
-        public static void setLeftMargin(IntPtr captureWindowObj, int margin)
+        public static void SetLeftMargin(IntPtr captureWindowObj, int margin)
         {
             if (captureWindowObj == IntPtr.Zero)
             {
                 return;
             }
-            NativeMethods.setLeftMargin(captureWindowObj, margin);
+            NativeMethods.SetLeftMargin(captureWindowObj, margin);
         }
 
-        public static void setRightMargin(IntPtr captureWindowObj, int margin)
+        public static void SetRightMargin(IntPtr captureWindowObj, int margin)
         {
             if (captureWindowObj == IntPtr.Zero)
             {
                 return;
             }
-            NativeMethods.setRightMargin(captureWindowObj, margin);
+            NativeMethods.SetRightMargin(captureWindowObj, margin);
         }
 
-        public static void setTopMargin(IntPtr captureWindowObj, int margin)
+        public static void SetTopMargin(IntPtr captureWindowObj, int margin)
         {
             if (captureWindowObj == IntPtr.Zero)
             {
                 return;
             }
-            NativeMethods.setTopMargin(captureWindowObj, margin);
+            NativeMethods.SetTopMargin(captureWindowObj, margin);
         }
 
-        public static void setBottomMargin(IntPtr captureWindowObj, int margin)
+        public static void SetBottomMargin(IntPtr captureWindowObj, int margin)
         {
             if (captureWindowObj == IntPtr.Zero)
             {
                 return;
             }
-            NativeMethods.setBottomMargin(captureWindowObj, margin);
+            NativeMethods.SetBottomMargin(captureWindowObj, margin);
         }
 
-        public static int getLeftMargin(IntPtr captureWindowObj)
+        public static int GetLeftMargin(IntPtr captureWindowObj)
         {
             if (captureWindowObj == IntPtr.Zero)
             {
                 return 0;
             }
-            return NativeMethods.getLeftMargin(captureWindowObj);
+            return NativeMethods.GetLeftMargin(captureWindowObj);
         }
 
-        public static int getRightMargin(IntPtr captureWindowObj)
+        public static int GetRightMargin(IntPtr captureWindowObj)
         {
             if (captureWindowObj == IntPtr.Zero)
             {
                 return 0;
             }
-            return NativeMethods.getRightMargin(captureWindowObj);
+            return NativeMethods.GetRightMargin(captureWindowObj);
         }
 
-        public static int getTopMargin(IntPtr captureWindowObj)
+        public static int GetTopMargin(IntPtr captureWindowObj)
         {
             if (captureWindowObj == IntPtr.Zero)
             {
                 return 0;
             }
-            return NativeMethods.getTopMargin(captureWindowObj);
+            return NativeMethods.GetTopMargin(captureWindowObj);
         }
 
-        public static int getBottomMargin(IntPtr captureWindowObj)
+        public static int GetBottomMargin(IntPtr captureWindowObj)
         {
             if (captureWindowObj == IntPtr.Zero)
             {
                 return 0;
             }
-            return NativeMethods.getBottomMargin(captureWindowObj);
+            return NativeMethods.GetBottomMargin(captureWindowObj);
         }
 
-        public static void setEnabledCapturePreview(IntPtr captureWindowObj, bool enabled)
+        public static void SetEnabledCapturePreview(IntPtr captureWindowObj, bool enabled)
         {
             if (captureWindowObj == IntPtr.Zero)
             {
                 return;
             }
-            NativeMethods.setEnabledCapturePreview(captureWindowObj, enabled);
+            NativeMethods.SetEnabledCapturePreview(captureWindowObj, enabled);
         }
 
-        public static int getCapturePreviewWidth()
+        public static int GetCapturePreviewWidth()
         {
-            return NativeMethods.getCapturePreviewWidth();
+            return NativeMethods.GetCapturePreviewWidth();
         }
 
-        public static int getCapturePreviewHeight()
+        public static int GetCapturePreviewHeight()
         {
-            return NativeMethods.getCapturePreviewHeight();
+            return NativeMethods.GetCapturePreviewHeight();
         }
 
-        public static bool isCapturing(IntPtr captureWindowObj)
+        public static bool IsCapturing(IntPtr captureWindowObj)
         {
             if (captureWindowObj == IntPtr.Zero)
             {
                 return false;
             }
-            return NativeMethods.isCapturing(captureWindowObj);
+            return NativeMethods.IsCapturing(captureWindowObj);
         }
 
-        public static int getCaptureWindowWidth(IntPtr captureWindowObj)
+        public static int GetCaptureWindowWidth(IntPtr captureWindowObj)
         {
             if (captureWindowObj == IntPtr.Zero)
             {
                 return 0;
             }
-            return NativeMethods.getCaptureWindowWidth(captureWindowObj);
+            return NativeMethods.GetCaptureWindowWidth(captureWindowObj);
         }
 
-        public static int getCaptureWindowHeight(IntPtr captureWindowObj)
+        public static int GetCaptureWindowHeight(IntPtr captureWindowObj)
         {
             if (captureWindowObj == IntPtr.Zero)
             {
                 return 0;
             }
-            return NativeMethods.getCaptureWindowHeight(captureWindowObj);
+            return NativeMethods.GetCaptureWindowHeight(captureWindowObj);
         }
 
-        public static float getCaptureFPS(IntPtr captureWindowObj)
+        public static float GetCaptureFPS(IntPtr captureWindowObj)
         {
             if (captureWindowObj == IntPtr.Zero)
             {
                 return 0.0f;
             }
-            return NativeMethods.getCaptureFPS(captureWindowObj);
+            return NativeMethods.GetCaptureFPS(captureWindowObj);
         }
 
-        public static void stopVirtualCamera(IntPtr captureWindowObj)
+        public static void StopVirtualCamera(IntPtr captureWindowObj)
         {
             if (captureWindowObj == IntPtr.Zero)
             {
                 return;
             }
-            NativeMethods.stopVirtualCamera(captureWindowObj);
+            NativeMethods.StopVirtualCamera(captureWindowObj);
         }
 
-        public static void deleteWindowCaptureObject(IntPtr captureWindowObj)
+        public static void DeleteWindowCaptureObject(IntPtr captureWindowObj)
         {
             if (captureWindowObj == IntPtr.Zero)
             {
                 return;
             }
-            NativeMethods.deleteWindowCaptureObject(captureWindowObj);
+            NativeMethods.DeleteWindowCaptureObject(captureWindowObj);
         }
 
-        public static void shutdownForMF()
+        public static void ShutdownForMF()
         {
-            NativeMethods.shutdownForMF();
+            NativeMethods.ShutdownForMF();
         }
     }
 }

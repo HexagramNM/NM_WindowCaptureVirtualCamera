@@ -2,204 +2,204 @@
 #include <mfapi.h>
 #include "NM_WindowCaptureAPI.h"
 
-void startupForMF() {
-	MFStartup(MF_VERSION);
+void StartupForMF() {
+    MFStartup(MF_VERSION);
 }
 
-NM_WindowCapture* createWindowCaptureObject(HWND baseHwnd)
+NM_WindowCapture* CreateWindowCaptureObject(HWND baseHwnd)
 {
-	NM_WindowCapture* result = new NM_WindowCapture(baseHwnd);
+    NM_WindowCapture* result = new NM_WindowCapture(baseHwnd);
 
-	return result;
+    return result;
 }
 
-void copyCapturePreviewToDXGIResource(NM_WindowCapture* windowCaptureObj, void* resourcePtr) {
-	if (windowCaptureObj != nullptr)
-	{
-		windowCaptureObj->CopyCapturePreviewToDXGIResource(resourcePtr);
-	}
+void CopyCapturePreviewToDXGIResource(NM_WindowCapture* windowCaptureObj, void* resourcePtr) {
+    if (windowCaptureObj != nullptr)
+    {
+        windowCaptureObj->CopyCapturePreviewToDXGIResource(resourcePtr);
+    }
 }
 
-void openWindowPicker(NM_WindowCapture* windowCaptureObj)
+void OpenWindowPicker(NM_WindowCapture* windowCaptureObj)
 {
-	if (windowCaptureObj != nullptr)
-	{
-		windowCaptureObj->OpenWindowPicker();
-	}
+    if (windowCaptureObj != nullptr)
+    {
+        windowCaptureObj->OpenWindowPicker();
+    }
 }
 
-void setTargetWindowForCapture(NM_WindowCapture* windowCaptureObj, HWND hwnd)
+void SetTargetWindowForCapture(NM_WindowCapture* windowCaptureObj, HWND hwnd)
 {
-	if (windowCaptureObj != nullptr)
-	{
-		windowCaptureObj->SetTargetWindowForCapture(hwnd);
-	}
+    if (windowCaptureObj != nullptr)
+    {
+        windowCaptureObj->SetTargetWindowForCapture(hwnd);
+    }
 }
 
-void startVirtualCamera(NM_WindowCapture* windowCaptureObj)
+void StartVirtualCamera(NM_WindowCapture* windowCaptureObj)
 {
-	if (windowCaptureObj != nullptr)
-	{
-		windowCaptureObj->CreateSharedCaptureWindowTexture();
-		windowCaptureObj->CreateVirtualCamera();
-	}
+    if (windowCaptureObj != nullptr)
+    {
+        windowCaptureObj->CreateSharedCaptureWindowTexture();
+        windowCaptureObj->CreateVirtualCamera();
+    }
 }
 
-void switchReverseCaptureWindow(NM_WindowCapture* windowCaptureObj)
+void SwitchReverseCaptureWindow(NM_WindowCapture* windowCaptureObj)
 {
-	if (windowCaptureObj != nullptr)
-	{
-		windowCaptureObj->SwitchReverseCamera();
-	}
+    if (windowCaptureObj != nullptr)
+    {
+        windowCaptureObj->SwitchReverseCamera();
+    }
 }
 
-void setLeftMargin(NM_WindowCapture* windowCaptureObj, int margin)
+void SetLeftMargin(NM_WindowCapture* windowCaptureObj, int margin)
 {
-	if (windowCaptureObj != nullptr) 
-	{
-		windowCaptureObj->SetLeftMargin(margin);
-	}
+    if (windowCaptureObj != nullptr) 
+    {
+        windowCaptureObj->SetLeftMargin(margin);
+    }
 }
 
-void setRightMargin(NM_WindowCapture* windowCaptureObj, int margin)
+void SetRightMargin(NM_WindowCapture* windowCaptureObj, int margin)
 {
-	if (windowCaptureObj != nullptr)
-	{
-		windowCaptureObj->SetRightMargin(margin);
-	}
+    if (windowCaptureObj != nullptr)
+    {
+        windowCaptureObj->SetRightMargin(margin);
+    }
 }
 
-void setTopMargin(NM_WindowCapture* windowCaptureObj, int margin)
+void SetTopMargin(NM_WindowCapture* windowCaptureObj, int margin)
 {
-	if (windowCaptureObj != nullptr)
-	{
-		windowCaptureObj->SetTopMargin(margin);
-	}
+    if (windowCaptureObj != nullptr)
+    {
+        windowCaptureObj->SetTopMargin(margin);
+    }
 }
 
-void setBottomMargin(NM_WindowCapture* windowCaptureObj, int margin)
+void SetBottomMargin(NM_WindowCapture* windowCaptureObj, int margin)
 {
-	if (windowCaptureObj != nullptr)
-	{
-		windowCaptureObj->SetBottomMargin(margin);
-	}
+    if (windowCaptureObj != nullptr)
+    {
+        windowCaptureObj->SetBottomMargin(margin);
+    }
 }
 
-int getLeftMargin(NM_WindowCapture* windowCaptureObj)
+int GetLeftMargin(NM_WindowCapture* windowCaptureObj)
 {
-	if (windowCaptureObj != nullptr)
-	{
-		return windowCaptureObj->GetLeftMargin();
-	}
+    if (windowCaptureObj != nullptr)
+    {
+        return windowCaptureObj->GetLeftMargin();
+    }
 
-	return 0;
+    return 0;
 }
 
-int getRightMargin(NM_WindowCapture* windowCaptureObj)
+int GetRightMargin(NM_WindowCapture* windowCaptureObj)
 {
-	if (windowCaptureObj != nullptr)
-	{
-		return windowCaptureObj->GetRightMargin();
-	}
+    if (windowCaptureObj != nullptr)
+    {
+        return windowCaptureObj->GetRightMargin();
+    }
 
-	return 0;
+    return 0;
 }
 
-int getTopMargin(NM_WindowCapture* windowCaptureObj)
+int GetTopMargin(NM_WindowCapture* windowCaptureObj)
 {
-	if (windowCaptureObj != nullptr)
-	{
-		return windowCaptureObj->GetTopMargin();
-	}
+    if (windowCaptureObj != nullptr)
+    {
+        return windowCaptureObj->GetTopMargin();
+    }
 
-	return 0;
+    return 0;
 }
 
-int getBottomMargin(NM_WindowCapture* windowCaptureObj)
+int GetBottomMargin(NM_WindowCapture* windowCaptureObj)
 {
-	if (windowCaptureObj != nullptr)
-	{
-		return windowCaptureObj->GetBottomMargin();
-	}
+    if (windowCaptureObj != nullptr)
+    {
+        return windowCaptureObj->GetBottomMargin();
+    }
 
-	return 0;
+    return 0;
 }
 
-void setEnabledCapturePreview(NM_WindowCapture* windowCaptureObj, bool enabled)
+void SetEnabledCapturePreview(NM_WindowCapture* windowCaptureObj, bool enabled)
 {
-	if (windowCaptureObj != nullptr)
-	{
-		windowCaptureObj->SetEnabledCapturePreview(enabled);
-	}
+    if (windowCaptureObj != nullptr)
+    {
+        windowCaptureObj->SetEnabledCapturePreview(enabled);
+    }
 }
 
-int getCapturePreviewWidth()
+int GetCapturePreviewWidth()
 {
-	return VCAM_VIDEO_WIDTH;
+    return VCAM_VIDEO_WIDTH;
 }
 
-int getCapturePreviewHeight()
+int GetCapturePreviewHeight()
 {
-	return VCAM_VIDEO_HEIGHT;
+    return VCAM_VIDEO_HEIGHT;
 }
 
-bool isCapturing(NM_WindowCapture* windowCaptureObj)
+bool IsCapturing(NM_WindowCapture* windowCaptureObj)
 {
-	if (windowCaptureObj != nullptr)
-	{
-		return windowCaptureObj->IsCapturing();
-	}
+    if (windowCaptureObj != nullptr)
+    {
+        return windowCaptureObj->IsCapturing();
+    }
 
-	return false;
+    return false;
 }
 
-int getCaptureWindowWidth(NM_WindowCapture* windowCaptureObj)
+int GetCaptureWindowWidth(NM_WindowCapture* windowCaptureObj)
 {
-	if (windowCaptureObj != nullptr)
-	{
-		return windowCaptureObj->GetCaptureWindowWidth();
-	}
+    if (windowCaptureObj != nullptr)
+    {
+        return windowCaptureObj->GetCaptureWindowWidth();
+    }
 
-	return 0;
+    return 0;
 }
 
-int getCaptureWindowHeight(NM_WindowCapture* windowCaptureObj)
+int GetCaptureWindowHeight(NM_WindowCapture* windowCaptureObj)
 {
-	if (windowCaptureObj != nullptr)
-	{
-		return windowCaptureObj->GetCaptureWindowHeight();
-	}
+    if (windowCaptureObj != nullptr)
+    {
+        return windowCaptureObj->GetCaptureWindowHeight();
+    }
 
-	return 0;
+    return 0;
 }
 
-float getCaptureFPS(NM_WindowCapture* windowCaptureObj)
+float GetCaptureFPS(NM_WindowCapture* windowCaptureObj)
 {
-	if (windowCaptureObj != nullptr)
-	{
-		return windowCaptureObj->GetCaptureFPS();
-	}
+    if (windowCaptureObj != nullptr)
+    {
+        return windowCaptureObj->GetCaptureFPS();
+    }
 
-	return 0.0f;
+    return 0.0f;
 }
 
-void stopVirtualCamera(NM_WindowCapture* windowCaptureObj)
+void StopVirtualCamera(NM_WindowCapture* windowCaptureObj)
 {
-	if (windowCaptureObj != nullptr)
-	{
-		windowCaptureObj->StopVirtualCamera();
-		windowCaptureObj->CloseSharedCaptureWindowTextureHandle();
-	}
+    if (windowCaptureObj != nullptr)
+    {
+        windowCaptureObj->StopVirtualCamera();
+        windowCaptureObj->CloseSharedCaptureWindowTextureHandle();
+    }
 }
 
-void deleteWindowCaptureObject(NM_WindowCapture* windowCaptureObj)
+void DeleteWindowCaptureObject(NM_WindowCapture* windowCaptureObj)
 {
-	if (windowCaptureObj != nullptr)
-	{
-		delete windowCaptureObj;
-	}
+    if (windowCaptureObj != nullptr)
+    {
+        delete windowCaptureObj;
+    }
 }
 
-void shutdownForMF() {
-	MFShutdown();
+void ShutdownForMF() {
+    MFShutdown();
 }
