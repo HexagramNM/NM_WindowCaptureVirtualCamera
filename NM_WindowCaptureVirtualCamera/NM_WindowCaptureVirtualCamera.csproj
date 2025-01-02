@@ -5,11 +5,16 @@
     <TargetFramework>net9.0-windows7.0</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
+    <ApplicationIcon>NM_WindowCaptureVirtualCamera.ico</ApplicationIcon>
   </PropertyGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <Exec Command="copy /y &quot;$(SolutionDir)NM_WindowCaptureVirtualCamera\bin\$(Configuration)\net9.0-windows7.0\NM_WindowCaptureVirtualCamera.exe&quot; &quot;$(SolutionDir)bin\$(Configuration)\NM_WindowCaptureVirtualCamera.exe&quot;&#xD;&#xA;copy /y &quot;$(SolutionDir)NM_WindowCaptureVirtualCamera\bin\$(Configuration)\net9.0-windows7.0\Microsoft.Wpf.Interop.DirectX.dll&quot; &quot;$(SolutionDir)bin\$(Configuration)\Microsoft.Wpf.Interop.DirectX.dll&quot;&#xD;&#xA;copy /y &quot;$(SolutionDir)NM_WindowCaptureVirtualCamera\bin\$(Configuration)\net9.0-windows7.0\NM_WindowCaptureVirtualCamera.dll&quot; &quot;$(SolutionDir)bin\$(Configuration)\NM_WindowCaptureVirtualCamera.dll&quot;&#xD;&#xA;copy /y &quot;$(SolutionDir)NM_WindowCaptureVirtualCamera\bin\$(Configuration)\net9.0-windows7.0\NM_WindowCaptureVirtualCamera.runtimeconfig.json&quot; &quot;$(SolutionDir)bin\$(Configuration)\NM_WindowCaptureVirtualCamera.runtimeconfig.json&quot;" />
   </Target>
+
+  <ItemGroup>
+    <Content Include="NM_WindowCaptureVirtualCamera.ico" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Wpf.Interop.DirectX-x64" Version="0.9.0-beta-22856" />
