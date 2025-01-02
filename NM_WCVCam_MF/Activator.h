@@ -1,5 +1,7 @@
 ﻿#pragma once
 
+#include "MediaSource.h"
+
 struct Activator : winrt::implements<Activator, CBaseAttributes<IMFActivate>>
 {
 public:

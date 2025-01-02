@@ -1,6 +1,5 @@
-﻿#include "pch.h"
-#include "EnumNames.h"
-#include "Tools.h"
+﻿
+#include "pch.h"
 #include "MFTools.h"
 
 void TraceMFAttributes(IUnknown* unknown, PCWSTR prefix)

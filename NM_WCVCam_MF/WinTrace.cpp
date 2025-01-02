@@ -1,4 +1,5 @@
-﻿#include "pch.h"
+﻿
+#include "pch.h"
 #include "Tools.h"
 
 // we don't use OutputDebugString because it's 100% crap, truncating, slow, etc.

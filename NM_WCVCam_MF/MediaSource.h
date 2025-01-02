@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-struct MediaStream;
+#include "MediaStream.h"
 
 struct MediaSource : winrt::implements<MediaSource, CBaseAttributes<IMFAttributes>, IMFMediaSourceEx, IMFGetService, IKsControl, IMFSampleAllocatorControl>
 {

@@ -1,6 +1,5 @@
-﻿#include "pch.h"
-#include "Tools.h"
-#include "EnumNames.h"
+﻿
+#include "pch.h"
 
 struct DWORDAndNameW
 {

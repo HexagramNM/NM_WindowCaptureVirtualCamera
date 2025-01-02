@@ -1,5 +1,7 @@
 ﻿#pragma once
 
+#include "FrameGenerator.h"
+
 struct MediaStream : winrt::implements<MediaStream, CBaseAttributes<IMFAttributes>, IMFMediaStream2, IKsControl>
 {
 public:

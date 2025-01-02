@@ -1,13 +1,11 @@
 ﻿
 #include "pch.h"
-#include "Undocumented.h"
-#include "Tools.h"
-#include "EnumNames.h"
 #include "MFTools.h"
 #include "FrameGenerator.h"
 #include "../global_config.h"
 
-HRESULT FrameGenerator::SetupD3D11Device() {
+HRESULT FrameGenerator::SetupD3D11Device() 
+{
     UINT resetToken;
     RETURN_IF_FAILED(MFCreateDXGIDeviceManager(&resetToken, _dxgiManager.put()));
 
@@ -70,7 +68,8 @@ HRESULT FrameGenerator::CreateSharedCaptureWindowTexture()
 }
 
 // NV12フォーマットのコンバータ (IMFTransform) 作成
-HRESULT FrameGenerator::SetupNV12Converter() {
+HRESULT FrameGenerator::SetupNV12Converter() 
+{
     // create GPU RGB => NV12 converter
     RETURN_IF_FAILED(CoCreateInstance(CLSID_VideoProcessorMFT, nullptr, CLSCTX_ALL, IID_PPV_ARGS(_converter.put())));
 
@@ -104,7 +103,8 @@ HRESULT FrameGenerator::SetupNV12Converter() {
 
 HRESULT FrameGenerator::EnsureRenderTarget(UINT width, UINT height)
 {
-    if (!_dxgiManager) {
+    if (!_dxgiManager) 
+    {
         _width = width;
         _height = height;
 
