@@ -74,6 +74,9 @@ namespace NM_WindowCaptureVirtualCamera
             internal static extern float GetCaptureFPS(IntPtr captureWindowObj);
 
             [DllImport("NM_WindowCapture.dll")]
+            internal static extern void SetCaptureCursor(IntPtr captureWindowObj, bool isCaptured);
+
+            [DllImport("NM_WindowCapture.dll")]
             internal static extern void StopVirtualCamera(IntPtr captureWindowObj);
 
             [DllImport("NM_WindowCapture.dll")]
@@ -263,6 +266,15 @@ namespace NM_WindowCaptureVirtualCamera
                 return 0.0f;
             }
             return NativeMethods.GetCaptureFPS(captureWindowObj);
+        }
+
+        public static void SetCaptureCursor(IntPtr captureWindowObj, bool isCaptured)
+        {
+            if (captureWindowObj == IntPtr.Zero)
+            {
+                return;
+            }
+            NativeMethods.SetCaptureCursor(captureWindowObj, isCaptured);
         }
 
         public static void StopVirtualCamera(IntPtr captureWindowObj)

@@ -123,14 +123,6 @@ namespace NM_WindowCaptureVirtualCamera
             NM_WindowCapture.OpenWindowPicker(captureObj);
         }
 
-        private void Button_trimmingReset_Click(object sender, RoutedEventArgs e)
-        {
-            NM_WindowCapture.SetLeftMargin(captureObj, 0);
-            NM_WindowCapture.SetRightMargin(captureObj, 0);
-            NM_WindowCapture.SetTopMargin(captureObj, 0);
-            NM_WindowCapture.SetBottomMargin(captureObj, 0);
-        }
-
         private void Button_cameraStart_Click(object sender, RoutedEventArgs e)
         {
             NM_WindowCapture.StartVirtualCamera(captureObj);
@@ -146,6 +138,24 @@ namespace NM_WindowCaptureVirtualCamera
         {
             NM_WindowCapture.StopVirtualCamera(captureObj);
             enableVCam = false;
+        }
+
+        private void Button_trimmingReset_Click(object sender, RoutedEventArgs e)
+        {
+            NM_WindowCapture.SetLeftMargin(captureObj, 0);
+            NM_WindowCapture.SetRightMargin(captureObj, 0);
+            NM_WindowCapture.SetTopMargin(captureObj, 0);
+            NM_WindowCapture.SetBottomMargin(captureObj, 0);
+        }
+
+        private void Checkbox_captureCursor_Checked(object sender, RoutedEventArgs e)
+        {
+            NM_WindowCapture.SetCaptureCursor(captureObj, true);
+        }
+
+        private void Checkbox_captureCursor_Unchecked(object sender, RoutedEventArgs e)
+        {
+            NM_WindowCapture.SetCaptureCursor(captureObj, false);
         }
 
         private void PreviewWindow_OnRender(nint resourcePtr, bool isNewSurface)
@@ -410,6 +420,16 @@ namespace NM_WindowCaptureVirtualCamera
                 button_cameraReverse.IsEnabled = (enableVCam && isCapturing);
                 button_cameraStop.IsEnabled = (enableVCam && isCapturing);
                 button_trimmingReset.IsEnabled = isCapturing;
+                checkbox_captureCursor.IsEnabled = isCapturing;
+
+                if (isCapturing)
+                {
+                    checkbox_captureCursor.Foreground = new SolidColorBrush(Colors.Black);
+                }
+                else
+                {
+                    checkbox_captureCursor.Foreground = new SolidColorBrush(Colors.Gray);
+                }
 
                 lastRender = args.RenderingTime;
             }

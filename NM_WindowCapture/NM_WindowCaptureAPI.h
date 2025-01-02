@@ -46,6 +46,8 @@ extern "C" __declspec(dllexport) int GetCaptureWindowHeight(NM_WindowCapture* wi
 
 extern "C" __declspec(dllexport) float GetCaptureFPS(NM_WindowCapture* windowCaptureObj);
 
+extern "C" __declspec(dllexport) void SetCaptureCursor(NM_WindowCapture* windowCaptureObj, bool isCaptured);
+
 extern "C" __declspec(dllexport) void StopVirtualCamera(NM_WindowCapture* windowCaptureObj);
 
 extern "C" __declspec(dllexport) void DeleteWindowCaptureObject(NM_WindowCapture *windowCaptureObj);

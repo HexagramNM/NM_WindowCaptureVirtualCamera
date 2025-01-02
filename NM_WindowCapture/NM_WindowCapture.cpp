@@ -529,11 +529,23 @@ void NM_WindowCapture::CopyCapturePreviewToDXGIResource(void* resourcePtr)
 /****************************************************************/
 bool NM_WindowCapture::IsCapturing() { return _framePoolForCapture != nullptr; }
 
+void NM_WindowCapture::SetCaptureCursor(bool isCaptured)
+{
+    std::lock_guard lock(_captureWindowLock);
+    _captureCursor = isCaptured;
+    if (_captureSession != nullptr) 
+    {
+        _captureSession.IsCursorCaptureEnabled(_captureCursor);
+    }
+}
+
 void NM_WindowCapture::StopCapture() 
 {
     if (IsCapturing()) 
     {
         _frameArrivedForCapture.revoke();
+
+        std::lock_guard lock(_captureWindowLock);
         _captureSession = nullptr;
         _framePoolForCapture.Close();
         _framePoolForCapture = nullptr;
@@ -566,7 +578,7 @@ void NM_WindowCapture::ChangeWindow()
     _frameArrivedForCapture = _framePoolForCapture.FrameArrived(auto_revoke, { this, &NM_WindowCapture::OnFrameArrived });
     _captureSession = _framePoolForCapture.CreateCaptureSession(_graphicsCaptureItem);
     //IsCursorCaptureEnabledでカーソルもキャプチャするか指定できる。
-    _captureSession.IsCursorCaptureEnabled(false);
+    _captureSession.IsCursorCaptureEnabled(_captureCursor);
     _captureSession.StartCapture();
 }
 

@@ -16,6 +16,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NM_WindowCapture", "NM_Wind
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NM_WindowCaptureVirtualCamera", "NM_WindowCaptureVirtualCamera\NM_WindowCaptureVirtualCamera.csproj", "{D30232A4-3454-4703-8BEF-13E7B3E072A2}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "NM_WindowCaptureVirtualCamera_Installer", "NM_WindowCaptureVirtualCamera_Installer\NM_WindowCaptureVirtualCamera_Installer.vdproj", "{51C3A9F5-54DE-45F1-A1D7-5C99D9F884A1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -86,6 +88,12 @@ Global
 		{D30232A4-3454-4703-8BEF-13E7B3E072A2}.Release|x64.Build.0 = Release|Any CPU
 		{D30232A4-3454-4703-8BEF-13E7B3E072A2}.Release|x86.ActiveCfg = Release|Any CPU
 		{D30232A4-3454-4703-8BEF-13E7B3E072A2}.Release|x86.Build.0 = Release|Any CPU
+		{51C3A9F5-54DE-45F1-A1D7-5C99D9F884A1}.Debug|Any CPU.ActiveCfg = Debug
+		{51C3A9F5-54DE-45F1-A1D7-5C99D9F884A1}.Debug|x64.ActiveCfg = Debug
+		{51C3A9F5-54DE-45F1-A1D7-5C99D9F884A1}.Debug|x86.ActiveCfg = Debug
+		{51C3A9F5-54DE-45F1-A1D7-5C99D9F884A1}.Release|Any CPU.ActiveCfg = Release
+		{51C3A9F5-54DE-45F1-A1D7-5C99D9F884A1}.Release|x64.ActiveCfg = Release
+		{51C3A9F5-54DE-45F1-A1D7-5C99D9F884A1}.Release|x86.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

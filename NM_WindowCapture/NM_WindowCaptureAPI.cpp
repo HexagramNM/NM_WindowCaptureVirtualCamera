@@ -183,6 +183,14 @@ float GetCaptureFPS(NM_WindowCapture* windowCaptureObj)
     return 0.0f;
 }
 
+void SetCaptureCursor(NM_WindowCapture* windowCaptureObj, bool isCaptured)
+{
+    if (windowCaptureObj != nullptr)
+    {
+        windowCaptureObj->SetCaptureCursor(isCaptured);
+    }
+}
+
 void StopVirtualCamera(NM_WindowCapture* windowCaptureObj)
 {
     if (windowCaptureObj != nullptr)

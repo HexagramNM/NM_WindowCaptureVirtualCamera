@@ -38,6 +38,7 @@ public:
         _sharedCaptureWindowHandle(nullptr),
         _reverseWindow(false),
         _enabledCapturePreview(false),
+        _captureCursor(false),
         _leftMargin(0),
         _rightMargin(0),
         _topMargin(0),
@@ -86,6 +87,7 @@ public:
     void CopyCapturePreviewToDXGIResource(void* resourcePtr);
 
     bool IsCapturing();
+    void SetCaptureCursor(bool isCaptured);
     int GetCaptureWindowWidth() { return _capWinSize.Width; }
     int GetCaptureWindowHeight() { return _capWinSize.Height; }
     float GetCaptureFPS() { return _captureFPS; }
@@ -130,6 +132,7 @@ private:
     SizeInt32 _capWinSize;
     bool _reverseWindow;
     bool _enabledCapturePreview;
+    bool _captureCursor;
     int _leftMargin;
     int _rightMargin;
     int _topMargin;
