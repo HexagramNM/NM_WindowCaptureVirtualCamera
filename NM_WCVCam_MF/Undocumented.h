@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 DECLARE_INTERFACE_IID_(IMFDeviceController, IUnknown, "A1F58958-A5AA-412F-AF20-1B7F1242DBA0") {};
 DECLARE_INTERFACE_IID_(IMFDeviceController2, IUnknown, "2032C7EF-76F6-492A-94F3-4A81F69380CC") {};

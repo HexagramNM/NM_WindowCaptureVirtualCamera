@@ -23,8 +23,8 @@ void NM_WindowCapture::CreateVirtualCamera()
     HRESULT hr = MFCreateVirtualCamera(MFVirtualCameraType_SoftwareCameraSource,
         MFVirtualCameraLifetime_Session,
         MFVirtualCameraAccess_CurrentUser,
-        TEXT("NM_WCVCam_MF"),
-        TEXT("{cc593221-3915-4084-bf70-dd9d8b481b4e}"),
+        NAME_NM_WCVCam_MF,
+        CLSID_TEXT_NM_WCVCam_MF,
         nullptr, 0, _vcam.put());
 
     if (hr == S_OK)
@@ -270,7 +270,7 @@ void NM_WindowCapture::CreateSharedCaptureWindowTexture()
     {
         HRESULT hr = sharedCaptureWindowResource->CreateSharedHandle(&secAttr,
             DXGI_SHARED_RESOURCE_READ,
-            TEXT("Global\\NM_WCVCam_Captured_Window"),
+            SHARED_CAPTURE_WINDOW_TEXTURE_PATH,
             &_sharedCaptureWindowHandle);
         com_ptr<IDXGIKeyedMutex> mutex;
         _sharedCaptureWindowTexture.as(mutex);

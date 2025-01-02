@@ -1,4 +1,4 @@
-EXPORTS
+﻿EXPORTS
 
 DllCanUnloadNow		PRIVATE
 DllGetClassObject	PRIVATE

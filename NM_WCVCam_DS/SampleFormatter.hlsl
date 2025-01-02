@@ -1,4 +1,4 @@
-
+﻿
 HLSL_EXTERNAL_INCLUDE(
 
 Texture2D<float4> offscreenTexture : register(t0);

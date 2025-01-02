@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 const std::string WM_ToString(UINT msg);
 const std::wstring VARTYPE_ToString(VARTYPE value);

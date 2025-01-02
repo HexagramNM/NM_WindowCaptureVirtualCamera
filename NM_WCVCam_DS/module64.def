@@ -1,7 +1,7 @@
-LIBRARY	"NM_WCVCam_DS_64"
+﻿LIBRARY	"NM_WCVCam_DS_64"
 
 EXPORTS
-	DllGetClassObject	      PRIVATE	 
-	DllCanUnloadNow           PRIVATE	 
-	DllRegisterServer	      PRIVATE	 
-	DllUnregisterServer       PRIVATE 
+    DllGetClassObject	      PRIVATE	 
+    DllCanUnloadNow           PRIVATE	 
+    DllRegisterServer	      PRIVATE	 
+    DllUnregisterServer       PRIVATE 

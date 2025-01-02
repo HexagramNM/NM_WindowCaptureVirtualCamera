@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #define WIN32_LEAN_AND_MEAN             // Exclude rarely-used stuff from Windows headers
 
@@ -51,6 +51,3 @@
 #include "wintrace.h"
 
 #pragma comment(lib, "mfsensorgroup")
-// {CC593221-3915-4084-BF70-DD9D8B481B4E}
-extern GUID CLSID_NM_WCVCam_MF;
-
