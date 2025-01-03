@@ -4528,12 +4528,6 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_7D6F0086B049A184F7233F0B34E64694"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_8D65E27F425840FBBCF05AD39404953A"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -5117,6 +5111,12 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_B205E24E68B83456A6605A9CC5CCD8EB"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_7D6F0086B049A184F7233F0B34E64694"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -8714,7 +8714,7 @@
         "Keywords" = "8:"
         "ARPCOMMENTS" = "8:"
         "ARPURLINFOABOUT" = "8:https://github.com/HexagramNM/NM_WindowCaptureVirtualCamera"
-        "ARPPRODUCTICON" = "8:"
+        "ARPPRODUCTICON" = "8:_F28BDD7EA8354D3D86F90CC71C6E8D4F"
         "ARPIconIndex" = "3:0"
         "SearchPath" = "8:"
         "UseSystemSearchPath" = "11:TRUE"
