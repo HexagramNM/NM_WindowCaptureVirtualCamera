@@ -4,6 +4,8 @@ bin
 packages
 x64
 
+InstallerAction/bin
+InstallerAction/obj
 NM_WCVCam_DS/Debug
 NM_WCVCam_DS/Release
 NM_WCVCam_DS/x64
@@ -11,6 +13,8 @@ NM_WCVCam_MF/x64
 NM_WindowCapture/x64
 NM_WindowCaptureVirtualCamera/bin
 NM_WindowCaptureVirtualCamera/obj
+NM_WindowCaptureVirtualCamera_Installer/Debug
+NM_WindowCaptureVirtualCamera_Installer/Release
 
 *.vcxproj.user
 *.csproj.user
