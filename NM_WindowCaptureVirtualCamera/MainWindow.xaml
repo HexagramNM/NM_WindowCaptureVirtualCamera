@@ -37,6 +37,6 @@
         <Label Content="Capture FPS: " Margin="0,0,70,10" Width="120" Height="40" FontSize="20" VerticalAlignment="Bottom" HorizontalAlignment="Right"/>
         <Label x:Name="label_captureFPS" Content="0.0" Margin="0,0,10,10" Width="60" Height="40" FontSize="20" VerticalAlignment="Bottom" HorizontalAlignment="Right"/>
         <Rectangle Fill="#00000000" Margin="0,0,140,50" MouseLeftButtonDown="Canvas_windowPreview_MouseLeftButtonDown" Panel.ZIndex="1"/>
-        <CheckBox x:Name="checkbox_captureCursor" Content="マウスカーソルをキャプチャ" Margin="170,0,0,10" Width="250" Height="40" FontSize="20" HorizontalAlignment="Left" VerticalAlignment="Bottom" VerticalContentAlignment="Center" Checked="Checkbox_captureCursor_Checked" Unchecked="Checkbox_captureCursor_Unchecked" Foreground="Gray"/>
+        <CheckBox x:Name="checkbox_captureCursor" Content="マウスカーソルをキャプチャ" Margin="170,0,0,10" Width="220" Height="40" FontSize="20" HorizontalAlignment="Left" VerticalAlignment="Bottom" VerticalContentAlignment="Center" Checked="Checkbox_captureCursor_Checked" Unchecked="Checkbox_captureCursor_Unchecked" Foreground="Gray"/>
     </Grid>
 </Window>

@@ -2,8 +2,6 @@
 
 #include "NM_WindowCapture.h"
 
-extern "C" __declspec(dllexport) void StartupForMF();
-
 extern "C" __declspec(dllexport) NM_WindowCapture *CreateWindowCaptureObject(HWND baseHwnd);
 
 extern "C" __declspec(dllexport) void CopyCapturePreviewToDXGIResource(NM_WindowCapture* windowCaptureObj, void* resourcePtr);
@@ -51,5 +49,3 @@ extern "C" __declspec(dllexport) void SetCaptureCursor(NM_WindowCapture* windowC
 extern "C" __declspec(dllexport) void StopVirtualCamera(NM_WindowCapture* windowCaptureObj);
 
 extern "C" __declspec(dllexport) void DeleteWindowCaptureObject(NM_WindowCapture *windowCaptureObj);
-
-extern "C" __declspec(dllexport) void ShutdownForMF();

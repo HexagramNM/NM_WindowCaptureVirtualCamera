@@ -1,10 +1,5 @@
 ﻿
-#include <mfapi.h>
 #include "NM_WindowCaptureAPI.h"
-
-void StartupForMF() {
-    MFStartup(MF_VERSION);
-}
 
 NM_WindowCapture* CreateWindowCaptureObject(HWND baseHwnd)
 {
@@ -206,8 +201,4 @@ void DeleteWindowCaptureObject(NM_WindowCapture* windowCaptureObj)
     {
         delete windowCaptureObj;
     }
-}
-
-void ShutdownForMF() {
-    MFShutdown();
 }

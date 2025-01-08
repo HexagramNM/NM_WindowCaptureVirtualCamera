@@ -26,14 +26,18 @@ for /f "usebackq delims=" %%a in (`%VSWHERE% ^| findstr productPath`) do set VSW
 set DEVENV="%VSWHERE_RESULT:productPath: =%"
 set DEVENVCOM=%DEVENV:.exe=.com%
 
-
 rem Update the solution for DirectShow library and build it.
 set BASECLASSES_SLN=External\windows-classic-samples\Samples\Win7Samples\multimedia\directshow\baseclasses\baseclasses.sln
 
 %DEVENVCOM% %BASECLASSES_SLN% /Upgrade 
 
-%DEVENVCOM% %BASECLASSES_SLN% /Rebuild "Debug^|Win32"
-%DEVENVCOM% %BASECLASSES_SLN% /Rebuild "Release^|Win32"
-%DEVENVCOM% %BASECLASSES_SLN% /Rebuild "Debug^|x64"
-%DEVENVCOM% %BASECLASSES_SLN% /Rebuild "Release^|x64"
 
+for /f "usebackq delims=" %%b in (`"%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe" -latest -products * -requires Microsoft.Component.MSBuild -find MSBuild\**\Bin\MSBuild.exe`) do set MSBUILD="%%b"
+
+%MSBUILD% %BASECLASSES_SLN% /p:ForceImportBeforeCppTargets="%~dp0customForMTd.prop" /p:Configuration=Debug /p:Platform=Win32 /t:Rebuild
+
+%MSBUILD% %BASECLASSES_SLN% /p:ForceImportBeforeCppTargets="%~dp0customForMTd.prop" /p:Configuration=Debug /p:Platform=x64 /t:Rebuild
+
+%MSBUILD% %BASECLASSES_SLN% /p:ForceImportBeforeCppTargets="%~dp0customForMT.prop" /p:Configuration=Release /p:Platform=Win32 /t:Rebuild
+
+%MSBUILD% %BASECLASSES_SLN% /p:ForceImportBeforeCppTargets="%~dp0customForMT.prop" /p:Configuration=Release /p:Platform=x64 /t:Rebuild

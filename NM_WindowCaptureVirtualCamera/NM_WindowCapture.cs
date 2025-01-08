@@ -8,9 +8,6 @@ namespace NM_WindowCaptureVirtualCamera
         private static class NativeMethods
         {
             [DllImport("NM_WindowCapture.dll")]
-            internal static extern void StartupForMF();
-
-            [DllImport("NM_WindowCapture.dll")]
             internal static extern IntPtr CreateWindowCaptureObject(IntPtr baseHwnd);
 
             [DllImport("NM_WindowCapture.dll")]
@@ -81,14 +78,6 @@ namespace NM_WindowCaptureVirtualCamera
 
             [DllImport("NM_WindowCapture.dll")]
             internal static extern void DeleteWindowCaptureObject(IntPtr captureWindowObj);
-
-            [DllImport("NM_WindowCapture.dll")]
-            internal static extern void ShutdownForMF();
-        }
-
-        public static void StartupForMF()
-        {
-            NativeMethods.StartupForMF();
         }
 
         public static IntPtr CreateWindowCaptureObject(IntPtr baseHwnd)
@@ -293,11 +282,6 @@ namespace NM_WindowCaptureVirtualCamera
                 return;
             }
             NativeMethods.DeleteWindowCaptureObject(captureWindowObj);
-        }
-
-        public static void ShutdownForMF()
-        {
-            NativeMethods.ShutdownForMF();
         }
     }
 }
