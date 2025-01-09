@@ -2,6 +2,7 @@
 #include "stdafx.h"
 #include "NMVCamFilter.h"
 #include <d3dcompiler.h>
+#include <thread>
 
 #define HLSL_EXTERNAL_INCLUDE(...) #__VA_ARGS__
 

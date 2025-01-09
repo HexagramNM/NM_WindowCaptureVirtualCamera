@@ -42,14 +42,14 @@ namespace InstallerAction
         {
             base.Install(stateSaver);
 
-            string targetFolder = Context.Parameters["targetdir"];
-            if (string.IsNullOrEmpty(targetFolder))
+            string targetDir = Context.Parameters["targetdir"];
+            if (string.IsNullOrEmpty(targetDir))
             {
                 return;
             }
 
-            ExecuteCommand("regsvr32.exe", "/s NM_WCVCam_DS_64.dll", targetFolder);
-            ExecuteCommand("regsvr32.exe", "/s NM_WCVCam_DS_32.dll", targetFolder);
+            ExecuteCommand("regsvr32.exe", "/s NM_WCVCam_DS_64.dll", targetDir);
+            ExecuteCommand("regsvr32.exe", "/s NM_WCVCam_DS_32.dll", targetDir);
 
             string versionKey = @"SOFTWARE\Microsoft\Windows NT\CurrentVersion";
             using (RegistryKey regKey = Registry.LocalMachine.OpenSubKey(versionKey))
@@ -63,8 +63,8 @@ namespace InstallerAction
                     if (majorVersion > win11MajorVersion || (majorVersion == win11MajorVersion &&
                         (minorVersion > win11MinorVersion || (minorVersion == win11MinorVersion && buildVersion >= win11BuildVersion))))
                     {
-                        ExecuteCommand("regsvr32.exe", "/s NM_WCVCam_MF.dll", targetFolder);
-                        ExecuteCommand("icacls.exe", "NM_WCVCam_MF.dll /grant BUILTIN\\Users:RX", targetFolder);
+                        ExecuteCommand("regsvr32.exe", "/s NM_WCVCam_MF.dll", targetDir);
+                        ExecuteCommand("icacls.exe", "NM_WCVCam_MF.dll /grant BUILTIN\\Users:RX", targetDir);
                     }
                 }
             }
@@ -84,14 +84,14 @@ namespace InstallerAction
         {
             base.Uninstall(stateSaver);
 
-            string targetFolder = Context.Parameters["targetdir"];
-            if (string.IsNullOrEmpty(targetFolder))
+            string targetDir = Context.Parameters["targetdir"];
+            if (string.IsNullOrEmpty(targetDir))
             {
                 return;
             }
 
-            ExecuteCommand("regsvr32.exe", "/s /u NM_WCVCam_DS_64.dll", targetFolder);
-            ExecuteCommand("regsvr32.exe", "/s /u NM_WCVCam_DS_32.dll", targetFolder);
+            ExecuteCommand("regsvr32.exe", "/s /u NM_WCVCam_DS_64.dll", targetDir);
+            ExecuteCommand("regsvr32.exe", "/s /u NM_WCVCam_DS_32.dll", targetDir);
 
             string versionKey = @"SOFTWARE\Microsoft\Windows NT\CurrentVersion";
             using (RegistryKey regKey = Registry.LocalMachine.OpenSubKey(versionKey))
@@ -105,8 +105,8 @@ namespace InstallerAction
                     if (majorVersion > win11MajorVersion || (majorVersion == win11MajorVersion &&
                         (minorVersion > win11MinorVersion || (minorVersion == win11MinorVersion && buildVersion >= win11BuildVersion))))
                     {
-                        ExecuteCommand("regsvr32.exe", "/s /u NM_WCVCam_MF.dll", targetFolder);
-                        ExecuteCommand("icacls.exe", "NM_WCVCam_MF.dll /remove:g BUILTIN\\Users", targetFolder);
+                        ExecuteCommand("regsvr32.exe", "/s /u NM_WCVCam_MF.dll", targetDir);
+                        ExecuteCommand("icacls.exe", "NM_WCVCam_MF.dll /remove:g BUILTIN\\Users", targetDir);
                     }
                 }
             }
