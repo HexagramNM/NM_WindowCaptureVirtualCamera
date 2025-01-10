@@ -10,6 +10,10 @@ const char* hlslOffscreenRenderingCode =
 #include "SpriteShader.hlsl"
 ;
 
+typedef HRESULT(WINAPI* PFN_MFCreateVirtualCamera)(MFVirtualCameraType,
+    MFVirtualCameraLifetime, MFVirtualCameraAccess, LPCWSTR, LPCWSTR, 
+    const GUID*, ULONG, IMFVirtualCamera**);
+
 /****************************************************************/
 /*  MediaFoundation Virtual Camera Function Start               */
 /****************************************************************/
@@ -20,17 +24,30 @@ void NM_WindowCapture::CreateVirtualCamera()
         return;
     }
 
-    HRESULT hr = MFCreateVirtualCamera(MFVirtualCameraType_SoftwareCameraSource,
-        MFVirtualCameraLifetime_Session,
-        MFVirtualCameraAccess_CurrentUser,
-        NAME_NM_WCVCam_MF,
-        CLSID_TEXT_NM_WCVCam_MF,
-        nullptr, 0, _vcam.put());
-
-    if (hr == S_OK)
+    HMODULE hMFSensorGroup = LoadLibraryW(L"mfsensorgroup.dll");
+    if (!hMFSensorGroup)
     {
-        _vcam->Start(nullptr);
+        return;
     }
+
+    PFN_MFCreateVirtualCamera pMFCreateVirtualCamera = 
+        reinterpret_cast<PFN_MFCreateVirtualCamera>(GetProcAddress(hMFSensorGroup, "MFCreateVirtualCamera"));
+    if (pMFCreateVirtualCamera)
+    {
+        HRESULT hr = pMFCreateVirtualCamera(MFVirtualCameraType_SoftwareCameraSource,
+            MFVirtualCameraLifetime_Session,
+            MFVirtualCameraAccess_CurrentUser,
+            NAME_NM_WCVCam_MF,
+            CLSID_TEXT_NM_WCVCam_MF,
+            nullptr, 0, _vcam.put());
+
+        if (hr == S_OK)
+        {
+            _vcam->Start(nullptr);
+        }
+    }
+
+    FreeLibrary(hMFSensorGroup);
 }
 
 void NM_WindowCapture::SwitchReverseCamera() 
