@@ -6,6 +6,14 @@
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
     <ApplicationIcon>NM_WindowCaptureVirtualCamera.ico</ApplicationIcon>
+    <AssemblyVersion></AssemblyVersion>
+    <Authors>HexagramNM</Authors>
+    <Title>NM_WindowCaptureVirtualCamera</Title>
+    <Company>HexagramNM</Company>
+    <Description>Main exe file of NM_WindowCaptureVirtualCamera</Description>
+    <Copyright>Copyright (C) 2025 HexagramNM. All rights reserved.</Copyright>
+    <PackageProjectUrl>https://github.com/HexagramNM/NM_WindowCaptureVirtualCamera</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/HexagramNM/NM_WindowCaptureVirtualCamera</RepositoryUrl>
   </PropertyGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">

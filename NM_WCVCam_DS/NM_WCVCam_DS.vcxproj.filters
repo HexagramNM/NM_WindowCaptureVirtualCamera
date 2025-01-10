@@ -34,6 +34,9 @@
     <ClInclude Include="NMVCamFilter.h">
       <Filter>header</Filter>
     </ClInclude>
+    <ClInclude Include="resource64.h">
+      <Filter>header</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="module64.def">
@@ -42,5 +45,8 @@
     <None Include="SampleFormatter.hlsl">
       <Filter>source</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="NM_WCVCam_DS.rc" />
   </ItemGroup>
 </Project>

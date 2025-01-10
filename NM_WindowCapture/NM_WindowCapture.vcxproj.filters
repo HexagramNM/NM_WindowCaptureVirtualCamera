@@ -21,6 +21,9 @@
     <ClInclude Include="NM_WindowCaptureAPI.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="NM_WindowCapture.cpp">
@@ -32,5 +35,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="SpriteShader.hlsl" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="NM_WindowCapture.rc">
+      <Filter>リソース ファイル</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

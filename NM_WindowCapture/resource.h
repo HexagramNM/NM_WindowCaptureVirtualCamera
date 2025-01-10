@@ -1,9 +1,8 @@
 ﻿//{{NO_DEPENDENCIES}}
-// Microsoft Visual C++ で生成されたインクルード ファイル。
-// NM_WCVCam_MF.rc で使用
-//
+// Microsoft Visual C++ generated include file.
+// Used by NM_WindowCapture.rc
 
-// Next default values for new objects
+// 新しいオブジェクトの次の既定値
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS

@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // 制御されます。アセンブリに関連付けられている情報を変更するには、
 // これらの属性値を変更してください。
 [assembly: AssemblyTitle("InstallerAction")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Customized installer action for NM_WindowCaptureVirtualCamera")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("InstallerAction")]
-[assembly: AssemblyCopyright("Copyright ©  2025")]
+[assembly: AssemblyCompany("HexagramNM")]
+[assembly: AssemblyProduct("NM_WindowCaptureVirtualCamera")]
+[assembly: AssemblyCopyright("Copyright (C) 2025 HexagramNM. All rights reserved.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

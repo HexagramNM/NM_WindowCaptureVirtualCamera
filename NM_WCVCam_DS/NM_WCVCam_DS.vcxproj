@@ -118,12 +118,16 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="NMVCamFilter.h" />
+    <ClInclude Include="resource64.h" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SampleFormatter.hlsl">
       <FileType>Document</FileType>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="NM_WCVCam_DS.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
