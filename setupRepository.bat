@@ -1,5 +1,7 @@
 @echo off
 
+setlocal enabledelayedexpansion
+
 rem Setting on submodules.
 cd External\windows-classic-samples
 
@@ -26,18 +28,44 @@ for /f "usebackq delims=" %%a in (`%VSWHERE% ^| findstr productPath`) do set VSW
 set DEVENV="%VSWHERE_RESULT:productPath: =%"
 set DEVENVCOM=%DEVENV:.exe=.com%
 
-rem Update the solution for DirectShow library and build it.
+
+rem Update the solution for DirectShow library.
 set BASECLASSES_SLN=External\windows-classic-samples\Samples\Win7Samples\multimedia\directshow\baseclasses\baseclasses.sln
 
-%DEVENVCOM% %BASECLASSES_SLN% /Upgrade 
+set BASECLASSES_PROJECT=External\windows-classic-samples\Samples\Win7Samples\multimedia\directshow\baseclasses\BaseClasses.vcxproj
+
+if not exist %BASECLASSES_PROJECT% (
+  %DEVENVCOM% %BASECLASSES_SLN% /Upgrade 
+)
 
 
+rem Create a modified vcxproj to use setting /MT or /MTd
+set BASECLASSES_PROJECT_MT=External\windows-classic-samples\Samples\Win7Samples\multimedia\directshow\baseclasses\BaseClasses_MT.vcxproj
+
+if not exist %BASECLASSES_PROJECT_MT% (
+  type nul > %BASECLASSES_PROJECT_MT%
+
+  for /f "usebackq delims=" %%p in (`type %BASECLASSES_PROJECT%`) do (
+    set LINE=%%p
+
+    rem change from MultiThreadedDebugDLL to MultiThreadedDebug
+    set MOD_LINE1=!LINE:^<RuntimeLibrary^>MultiThreadedDebugDLL^</RuntimeLibrary^>=^<RuntimeLibrary^>MultiThreadedDebug^</RuntimeLibrary^>!
+
+    rem change from MultiThreadedDLL to MultiThreaded
+    set MOD_LINE2=!MOD_LINE1:^<RuntimeLibrary^>MultiThreadedDLL^</RuntimeLibrary^>=^<RuntimeLibrary^>MultiThreaded^</RuntimeLibrary^>!
+
+    echo !MOD_LINE2! >> %BASECLASSES_PROJECT_MT%
+  )
+)
+
+
+rem Build the modified project
 for /f "usebackq delims=" %%b in (`"%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe" -latest -products * -requires Microsoft.Component.MSBuild -find MSBuild\**\Bin\MSBuild.exe`) do set MSBUILD="%%b"
 
-%MSBUILD% %BASECLASSES_SLN% /p:ForceImportBeforeCppTargets="%~dp0customForMTd.prop" /p:Configuration=Debug /p:Platform=Win32 /t:Rebuild
+%MSBUILD% %BASECLASSES_PROJECT_MT% /p:Configuration=Debug /p:Platform=Win32 /t:Rebuild 
 
-%MSBUILD% %BASECLASSES_SLN% /p:ForceImportBeforeCppTargets="%~dp0customForMTd.prop" /p:Configuration=Debug /p:Platform=x64 /t:Rebuild
+%MSBUILD% %BASECLASSES_PROJECT_MT% /p:Configuration=Debug /p:Platform=x64 /t:Rebuild
 
-%MSBUILD% %BASECLASSES_SLN% /p:ForceImportBeforeCppTargets="%~dp0customForMT.prop" /p:Configuration=Release /p:Platform=Win32 /t:Rebuild
+%MSBUILD% %BASECLASSES_PROJECT_MT% /p:Configuration=Release /p:Platform=Win32 /t:Rebuild
 
-%MSBUILD% %BASECLASSES_SLN% /p:ForceImportBeforeCppTargets="%~dp0customForMT.prop" /p:Configuration=Release /p:Platform=x64 /t:Rebuild
+%MSBUILD% %BASECLASSES_PROJECT_MT% /p:Configuration=Release /p:Platform=x64 /t:Rebuild
