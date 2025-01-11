@@ -306,8 +306,21 @@ void NM_WindowCapture::CloseSharedCaptureWindowTextureHandle()
     if (_sharedCaptureWindowHandle != NULL
         && _sharedCaptureWindowHandle != INVALID_HANDLE_VALUE) 
     {
+        com_ptr<IDXGIKeyedMutex> mutex;
+        if (_sharedCaptureWindowTexture != nullptr)
+        {
+            _sharedCaptureWindowTexture.as(mutex);
+            mutex->AcquireSync(MUTEX_KEY, INFINITE);
+        }
+
         CloseHandle(_sharedCaptureWindowHandle);
         _sharedCaptureWindowHandle = NULL;
+
+        if (_sharedCaptureWindowTexture != nullptr)
+        {
+            _sharedCaptureWindowTexture.as(mutex);
+            mutex->ReleaseSync(MUTEX_KEY);
+        }
     }
 
     if (_sharedCaptureWindowTexture != nullptr) 

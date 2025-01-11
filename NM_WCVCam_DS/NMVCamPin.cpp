@@ -52,31 +52,31 @@ void NMVCamPin::GetSharedTextureFromHandle()
     _dxDevice->OpenSharedResourceByName(SHARED_CAPTURE_WINDOW_TEXTURE_PATH,
         DXGI_SHARED_RESOURCE_READ, IID_PPV_ARGS(tempCaptureWindowTexture.put()));
 
-    if (_sharedCaptureWindowTexture == nullptr) 
+    if (tempCaptureWindowTexture == nullptr)
     {
-        if (tempCaptureWindowTexture != nullptr) 
+        _sharedCaptureWindowTexture = nullptr;
+        CD3D11_SHADER_RESOURCE_VIEW_DESC shaderResourceViewDesc(D3D11_SRV_DIMENSION_TEXTURE2D, DXGI_FORMAT_B8G8R8A8_UNORM);
+        _dxDevice->CreateShaderResourceView(_placeholderTexture.get(),
+            &shaderResourceViewDesc, _formatterSRV.put());
+    }
+    else
+    {
+        if (_sharedCaptureWindowTexture == nullptr)
         {
             _sharedCaptureWindowTexture = tempCaptureWindowTexture;
-            CD3D11_SHADER_RESOURCE_VIEW_DESC shaderResourceViewDesc(D3D11_SRV_DIMENSION_TEXTURE2D, DXGI_FORMAT_B8G8R8A8_UNORM);
-            _dxDevice->CreateShaderResourceView(_sharedCaptureWindowTexture.get(),
-                &shaderResourceViewDesc, _formatterSRV.put());
         }
-        else if (_formatterSRV == nullptr)
+
+        // ここのmutexはGetSampleOnCaptureWindowでReleaseしている。
+        winrt::com_ptr<IDXGIKeyedMutex> mutex;
+        _sharedCaptureWindowTexture->QueryInterface(IID_PPV_ARGS(mutex.put()));
+        if (mutex != nullptr)
         {
-            CD3D11_SHADER_RESOURCE_VIEW_DESC shaderResourceViewDesc(D3D11_SRV_DIMENSION_TEXTURE2D, DXGI_FORMAT_B8G8R8A8_UNORM);
-            _dxDevice->CreateShaderResourceView(_placeholderTexture.get(),
-                &shaderResourceViewDesc, _formatterSRV.put());
+            mutex->AcquireSync(MUTEX_KEY, INFINITE);
         }
-    }
-    else 
-    {
-        if (tempCaptureWindowTexture == nullptr) 
-        {
-            _sharedCaptureWindowTexture = nullptr;
-            CD3D11_SHADER_RESOURCE_VIEW_DESC shaderResourceViewDesc(D3D11_SRV_DIMENSION_TEXTURE2D, DXGI_FORMAT_B8G8R8A8_UNORM);
-            _dxDevice->CreateShaderResourceView(_placeholderTexture.get(),
-                &shaderResourceViewDesc, _formatterSRV.put());
-        }
+
+        CD3D11_SHADER_RESOURCE_VIEW_DESC shaderResourceViewDesc(D3D11_SRV_DIMENSION_TEXTURE2D, DXGI_FORMAT_B8G8R8A8_UNORM);
+        _dxDevice->CreateShaderResourceView(_sharedCaptureWindowTexture.get(),
+            &shaderResourceViewDesc, _formatterSRV.put());
     }
 }
 
@@ -193,26 +193,22 @@ void NMVCamPin::DrawPlaceholder()
 // コンピュートシェーダでサンプルのフォーマットにあったバッファを作成
 void NMVCamPin::GetSampleOnCaptureWindow(LPBYTE sampleData)
 {
-    winrt::com_ptr<IDXGIKeyedMutex> mutex;
-    if (_sharedCaptureWindowTexture != nullptr) 
-    {
-        _sharedCaptureWindowTexture->QueryInterface(IID_PPV_ARGS(mutex.put()));
-    }
-
-    if (mutex) 
-    {
-        mutex->AcquireSync(MUTEX_KEY, INFINITE);
-    }
-
     ID3D11ShaderResourceView* tempShaderResourceViewPtr[] = { _formatterSRV.get() };
     _dxDeviceContext->CSSetShaderResources(0, 1, tempShaderResourceViewPtr);
     _dxDeviceContext->Dispatch(VCAM_VIDEO_WIDTH / (CS_THREADS_NUM * 4), VCAM_VIDEO_HEIGHT / CS_THREADS_NUM, 1);
 
     ID3D11ShaderResourceView* tempShaderResourceViewNullPtr[] = { nullptr };
     _dxDeviceContext->CSSetShaderResources(0, 1, tempShaderResourceViewNullPtr);
-    if (mutex) 
+
+    // ここのmutexはGetSharedTextureFromHandleでAcquireしている。
+    if (_sharedCaptureWindowTexture != nullptr)
     {
-        mutex->ReleaseSync(MUTEX_KEY);
+        winrt::com_ptr<IDXGIKeyedMutex> mutex;
+        _sharedCaptureWindowTexture->QueryInterface(IID_PPV_ARGS(mutex.put()));
+        if (mutex != nullptr)
+        {
+            mutex->ReleaseSync(MUTEX_KEY);
+        }
     }
 
     _dxDeviceContext->CopyResource(_cpuSampleBuffer.get(), _gpuFormatterBuffer.get());
