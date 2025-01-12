@@ -14,7 +14,7 @@
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
     <ProjectGuid>{425ca890-b320-4509-a06a-bfec27597afd}</ProjectGuid>
-    <RootNamespace>CaptureWindow</RootNamespace>
+    <RootNamespace>NM_WindowCapture</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
     <ProjectName>NM_WindowCapture</ProjectName>
   </PropertyGroup>

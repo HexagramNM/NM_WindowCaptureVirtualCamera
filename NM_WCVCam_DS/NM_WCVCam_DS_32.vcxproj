@@ -12,7 +12,7 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{4BFFDE4D-6518-423D-96C7-43E78F6CF03E}</ProjectGuid>
-    <RootNamespace>MySourceFilter</RootNamespace>
+    <RootNamespace>NM_WCVCam_DS</RootNamespace>
     <Keyword>Win32Proj</Keyword>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
     <ProjectName>NM_WCVCam_DS_32</ProjectName>

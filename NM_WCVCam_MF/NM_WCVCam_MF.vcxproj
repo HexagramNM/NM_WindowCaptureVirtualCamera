@@ -15,7 +15,7 @@
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
     <ProjectGuid>{52fb6b93-3aa6-4369-bed4-d4bff1f97b78}</ProjectGuid>
-    <RootNamespace>VCamSampleSource</RootNamespace>
+    <RootNamespace>NM_WCVCam_MF</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
     <ProjectName>NM_WCVCam_MF</ProjectName>
   </PropertyGroup>
