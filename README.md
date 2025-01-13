@@ -32,7 +32,7 @@ nuget経由で[WPFDXInterop](https://github.com/microsoft/WPFDXInterop)を導入
 
 ## インストーラを使用する場合（x64用）
 
-1. [こちら](Installer/NM_WindowCaptureVirtualCamera.zip)からインストーラを含むzipファイルをダウンロードし、解凍してください。
+1. [こちら](https://github.com/HexagramNM/NM_WindowCaptureVirtualCamera/releases/download/v1.0.0/NM_WindowCaptureVirtualCamera.zip)からインストーラを含むzipファイルをダウンロードし、解凍してください。
 
 2. 解凍したフォルダの中にある`setup.exe`を実行します。
 
