@@ -11,7 +11,7 @@
 
 * 簡単な設定でウィンドウの選択や仮想カメラの起動、映像のトリミングを行うことができます。
 
-* Windows 11から使用可能なMediaFoundationの仮想カメラを使用できます。
+* Windows 11から使用可能なMediaFoundationの仮想カメラを使用できます。Windows標準のカメラアプリにも映し出すことができます。
 
 
 # 必要環境
@@ -62,11 +62,14 @@ nuget経由で[WPFDXInterop](https://github.com/microsoft/WPFDXInterop)を導入
     - DirectShowのビルド（必要なスタティックライブラリのビルド）
 
 3. Visual Studioで`NM_WindowCaptureVirtualCamera.sln`を開き、Releaseモードでビルドします。
+   ツールのexeファイルなどはルートにできたbinディレクトリに生成されます。
 
 4. ビルドが完了したら、管理者権限で`installVCam.bat`を実行してください。
    これにより仮想カメラがレジストリに登録されます。
 
-5. アンインストールする際はファイルを消す前に、管理者権限で`uninstallVCam.bat`を実行してください。
+5. binディレクトリにあるexeファイルをダブルクリックすると、ツールが起動します。
+
+6. アンインストールする際はファイルを消す前に、管理者権限で`uninstallVCam.bat`を実行してください。
    これによりレジストリにある仮想カメラの登録が解除されます。
 
 
