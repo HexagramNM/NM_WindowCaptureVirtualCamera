@@ -28,4 +28,19 @@
     <PackageReference Include="Microsoft.Wpf.Interop.DirectX-x64" Version="0.9.0-beta-22856" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Update="Strings\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Strings\Resources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
 </Project>
