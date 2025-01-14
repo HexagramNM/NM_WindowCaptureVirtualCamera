@@ -1,5 +1,7 @@
 # <img width="80" src="DocAssets/NM_WindowCaptureVirtualCamera_icon.png"> NM_WindowCaptureVirtualCamera
 
+[English](README.md)
+
 ![UI_image.png](DocAssets/ja/UI_image.png)
 
 ウィンドウをキャプチャし、仮想カメラ（MediaFoundation, DirectShow）で映像を送る汎用ツールです。
@@ -53,7 +55,7 @@ nuget経由で[WPFDXInterop](https://github.com/microsoft/WPFDXInterop)を導入
 2. クローン後、`setupRepository.bat`を実行してください。
 
     これにより、以下の処理を実行します。
-    - binディレクトリの生成
+    - `bin`ディレクトリの生成
     
     - サブモジュール内の不要なファイルを削除するように設定
 
@@ -62,12 +64,12 @@ nuget経由で[WPFDXInterop](https://github.com/microsoft/WPFDXInterop)を導入
     - DirectShowのビルド（必要なスタティックライブラリのビルド）
 
 3. Visual Studioで`NM_WindowCaptureVirtualCamera.sln`を開き、Releaseモードでビルドします。
-   ツールのexeファイルなどはルートにできたbinディレクトリに生成されます。
+   ツールのexeファイルなどはルートにできた`bin`ディレクトリに生成されます。
 
 4. ビルドが完了したら、管理者権限で`installVCam.bat`を実行してください。
    これにより仮想カメラがレジストリに登録されます。
 
-5. binディレクトリにあるexeファイルをダブルクリックすると、ツールが起動します。
+5. `bin`ディレクトリにあるexeファイルをダブルクリックすると、ツールが起動します。
 
 6. アンインストールする際はファイルを消す前に、管理者権限で`uninstallVCam.bat`を実行してください。
    これによりレジストリにある仮想カメラの登録が解除されます。
