@@ -1,6 +1,6 @@
 # <img width="80" src="DocAssets/NM_WindowCaptureVirtualCamera_icon.png"> NM_WindowCaptureVirtualCamera
 
-[English](README.md)
+[English](README_en.md)
 
 ![UI_image.png](DocAssets/ja/UI_image.png)
 
