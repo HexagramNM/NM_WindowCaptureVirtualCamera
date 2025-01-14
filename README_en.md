@@ -4,8 +4,8 @@
 
 ![UI_image_en.png](DocAssets/en/UI_image_en.png)
 
-[!NOTE]
-GitHub Copilot Free is used for translation of this document.
+> [!NOTE]
+> GitHub Copilot Free is used for translation of this document.
 
 
 This is a general-purpose tool that captures a window and sends its footage to a virtual camera (MediaFoundation, DirectShow).
