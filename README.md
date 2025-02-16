@@ -1,6 +1,8 @@
 # <img width="80" src="DocAssets/NM_WindowCaptureVirtualCamera_icon.png"> NM_WindowCaptureVirtualCamera
 
-[English](README_en.md)
+[English](README_en.md) 
+
+[技術的な知見をまとめたWiki](https://github.com/HexagramNM/NM_WindowCaptureVirtualCamera/wiki)
 
 ![UI_image.png](DocAssets/ja/UI_image.png)
 
