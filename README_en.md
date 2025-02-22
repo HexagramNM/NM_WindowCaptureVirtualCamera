@@ -19,6 +19,9 @@ Compared to the virtual camera of [OBS](https://obsproject.com), it has the foll
 
 * You can use the MediaFoundation virtual camera available from Windows 11. It can also be displayed in the standard Windows camera app.
 
+> [!WARNING]
+> It has been confirmed that the MediaFoundation virtual camera does not work on Windows 11 version 24H2. Since 24H2 is currently unstable, it is difficult to determine whether the issue is with the OS or this code. We plan to address this issue once the OS stabilizes. The DirectShow virtual camera works, so if you are using this tool on 24H2, please use the DirectShow virtual camera.
+
 
 # System Requirements
 
