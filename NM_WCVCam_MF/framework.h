@@ -14,12 +14,9 @@
 
 // Windows Header Files
 #include <windows.h>
-#include <evntprov.h>
-#include <strsafe.h>
 #include <initguid.h>
 #include <propvarutil.h>
 #include <mfapi.h>
-#include <mfidl.h>
 #include <mfvirtualcamera.h>
 #include <mferror.h>
 #include <mfcaptureengine.h>
@@ -28,26 +25,17 @@
 #include <ksmedia.h>
 #include <dxgi.h>
 #include <d3d11.h>
-#include <d2d1_1.h>
-#include <dwrite.h>
-#include <wincodec.h>
 #include <uuids.h>
-#include "winrt\Windows.ApplicationModel.h"
 
 // std
 #include <string>
 #include <format>
 
 // WIL, requires "Microsoft.Windows.ImplementationLibrary" nuget
-#include "wil/result.h"
-#include "wil/stl.h"
 #include "wil/win32_helpers.h"
 #include "wil/com.h"
 
 // C++/WinRT, requires "Microsoft.Windows.CppWinRT" nuget
-#include "winrt/base.h"
-
-// project globals
-#include "wintrace.h"
+#include "winrt/Windows.ApplicationModel.h"
 
 #pragma comment(lib, "mfsensorgroup")

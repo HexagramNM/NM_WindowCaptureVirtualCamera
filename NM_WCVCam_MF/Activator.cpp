@@ -1,7 +1,7 @@
 ﻿
 #include "pch.h"
 #include "Undocumented.h"
-#include "MFTools.h"
+#include "Tools.h"
 #include "Activator.h"
 #include "../global_config.h"
 
@@ -17,33 +17,20 @@ HRESULT Activator::Initialize()
 // IMFActivate
 STDMETHODIMP Activator::ActivateObject(REFIID riid, void** ppv)
 {
-    WINTRACE(L"Activator::ActivateObject '%s'", GUID_ToStringW(riid).c_str());
     RETURN_HR_IF_NULL(E_POINTER, ppv);
     *ppv = nullptr;
 
-    // use undoc'd frame server property
-    UINT32 pid = 0;
-    if (SUCCEEDED(GetUINT32(MF_FRAMESERVER_CLIENTCONTEXT_CLIENTPID, &pid)) && pid)
-    {
-        auto name = GetProcessName(pid);
-        if (!name.empty())
-        {
-            WINTRACE(L"Activator::ActivateObject client process '%s'", name.c_str());
-        }
-    }
     RETURN_IF_FAILED_MSG(_source->QueryInterface(riid, ppv), "Activator::ActivateObject failed on IID %s", GUID_ToStringW(riid).c_str());
     return S_OK;
 }
 
 STDMETHODIMP Activator::ShutdownObject()
 {
-    WINTRACE(L"Activator::ShutdownObject");
     return S_OK;
 }
 
 STDMETHODIMP Activator::DetachObject()
 {
-    WINTRACE(L"Activator::DetachObject");
     _source = nullptr;
     return S_OK;
 }

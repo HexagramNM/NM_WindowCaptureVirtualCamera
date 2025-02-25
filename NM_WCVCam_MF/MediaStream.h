@@ -1,8 +1,9 @@
 ﻿#pragma once
 
+#include "CBaseMFAttributes.h"
 #include "FrameGenerator.h"
 
-struct MediaStream : winrt::implements<MediaStream, CBaseAttributes<IMFAttributes>, IMFMediaStream2, IKsControl>
+struct MediaStream : winrt::implements<MediaStream, CBaseMFAttributes<IMFAttributes>, IMFMediaStream2, IKsControl>
 {
 public:
     // IMFMediaEventGenerator
@@ -31,7 +32,6 @@ public:
         _state(MF_STREAM_STATE_STOPPED),
         _format(GUID_NULL)
     {
-        SetBaseAttributesTraceName(L"MediaStreamAtts");
     }
 
     HRESULT Initialize(IMFMediaSource* source, int index);

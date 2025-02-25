@@ -1,6 +1,6 @@
 ﻿
 #include "pch.h"
-#include "MFTools.h"
+#include "Tools.h"
 #include "MediaStream.h"
 
 #include "../global_config.h"
@@ -57,7 +57,6 @@ HRESULT MediaStream::Initialize(IMFMediaSource* source, int index)
 
     wil::com_ptr_nothrow<IMFMediaTypeHandler> handler;
     RETURN_IF_FAILED(_descriptor->GetMediaTypeHandler(&handler));
-    TraceMFAttributes(handler.get(), L"MediaTypeHandler");
     RETURN_IF_FAILED(handler->SetCurrentMediaType(types[0]));
 
     return S_OK;
@@ -70,7 +69,6 @@ HRESULT MediaStream::Start(IMFMediaType* type)
     if (type)
     {
         RETURN_IF_FAILED(type->GetGUID(MF_MT_SUBTYPE, &_format));
-        WINTRACE(L"MediaStream::Start format: %s", GUID_ToStringW(_format).c_str());
     }
 
     // at this point, set D3D manager may have not been called
@@ -128,7 +126,6 @@ void MediaStream::Shutdown()
 // IMFMediaEventGenerator
 STDMETHODIMP MediaStream::BeginGetEvent(IMFAsyncCallback* pCallback, IUnknown* punkState)
 {
-    //WINTRACE(L"MediaSource::BeginGetEvent");
     winrt::slim_lock_guard lock(_lock);
     RETURN_HR_IF(MF_E_SHUTDOWN, !_queue);
 
@@ -138,7 +135,6 @@ STDMETHODIMP MediaStream::BeginGetEvent(IMFAsyncCallback* pCallback, IUnknown* p
 
 STDMETHODIMP MediaStream::EndGetEvent(IMFAsyncResult* pResult, IMFMediaEvent** ppEvent)
 {
-    //WINTRACE(L"MediaStream::EndGetEvent");
     RETURN_HR_IF_NULL(E_POINTER, ppEvent);
     *ppEvent = nullptr;
     winrt::slim_lock_guard lock(_lock);
@@ -150,7 +146,6 @@ STDMETHODIMP MediaStream::EndGetEvent(IMFAsyncResult* pResult, IMFMediaEvent** p
 
 STDMETHODIMP MediaStream::GetEvent(DWORD dwFlags, IMFMediaEvent** ppEvent)
 {
-    WINTRACE(L"MediaStream::GetEvent");
     RETURN_HR_IF_NULL(E_POINTER, ppEvent);
     *ppEvent = nullptr;
     winrt::slim_lock_guard lock(_lock);
@@ -162,7 +157,6 @@ STDMETHODIMP MediaStream::GetEvent(DWORD dwFlags, IMFMediaEvent** ppEvent)
 
 STDMETHODIMP MediaStream::QueueEvent(MediaEventType met, REFGUID guidExtendedType, HRESULT hrStatus, const PROPVARIANT* pvValue)
 {
-    WINTRACE(L"MediaStream::QueueEvent");
     winrt::slim_lock_guard lock(_lock);
     RETURN_HR_IF(MF_E_SHUTDOWN, !_queue);
 
@@ -173,7 +167,6 @@ STDMETHODIMP MediaStream::QueueEvent(MediaEventType met, REFGUID guidExtendedTyp
 // IMFMediaStream
 STDMETHODIMP MediaStream::GetMediaSource(IMFMediaSource** ppMediaSource)
 {
-    WINTRACE(L"MediaSource::GetMediaSource");
     RETURN_HR_IF_NULL(E_POINTER, ppMediaSource);
     *ppMediaSource = nullptr;
     RETURN_HR_IF(MF_E_SHUTDOWN, !_source);
@@ -184,7 +177,6 @@ STDMETHODIMP MediaStream::GetMediaSource(IMFMediaSource** ppMediaSource)
 
 STDMETHODIMP MediaStream::GetStreamDescriptor(IMFStreamDescriptor** ppStreamDescriptor)
 {
-    WINTRACE(L"MediaStream::GetStreamDescriptor");
     RETURN_HR_IF_NULL(E_POINTER, ppStreamDescriptor);
     *ppStreamDescriptor = nullptr;
     winrt::slim_lock_guard lock(_lock);
@@ -196,7 +188,6 @@ STDMETHODIMP MediaStream::GetStreamDescriptor(IMFStreamDescriptor** ppStreamDesc
 
 STDMETHODIMP MediaStream::RequestSample(IUnknown* pToken)
 {
-    //WINTRACE(L"MediaStream::RequestSample pToken:%p", pToken);
     winrt::slim_lock_guard lock(_lock);
     RETURN_HR_IF(MF_E_SHUTDOWN, !_allocator || !_queue);
 
@@ -220,7 +211,6 @@ STDMETHODIMP MediaStream::RequestSample(IUnknown* pToken)
 // IMFMediaStream2
 STDMETHODIMP MediaStream::SetStreamState(MF_STREAM_STATE value)
 {
-    WINTRACE(L"MediaStream::SetStreamState current:%u value:%u", _state, value);
     if (_state = value)
         return S_OK;
     switch (value)
@@ -249,7 +239,6 @@ STDMETHODIMP MediaStream::SetStreamState(MF_STREAM_STATE value)
 
 STDMETHODIMP MediaStream::GetStreamState(MF_STREAM_STATE* value)
 {
-    WINTRACE(L"MediaStream::GetStreamState state:%u", _state);
     RETURN_HR_IF_NULL(E_POINTER, value);
     *value = _state;
     return S_OK;
@@ -258,34 +247,26 @@ STDMETHODIMP MediaStream::GetStreamState(MF_STREAM_STATE* value)
 // IKsControl
 STDMETHODIMP_(NTSTATUS) MediaStream::KsProperty(PKSPROPERTY property, ULONG length, LPVOID data, ULONG dataLength, ULONG* bytesReturned)
 {
-    WINTRACE(L"MediaStream::KsProperty len:%u data:%p dataLength:%u", length, data, dataLength);
     RETURN_HR_IF_NULL(E_POINTER, property);
     RETURN_HR_IF_NULL(E_POINTER, bytesReturned);
     winrt::slim_lock_guard lock(_lock);
-
-    WINTRACE(L"MediaStream::KsProperty prop:%s", PKSIDENTIFIER_ToString(property, length).c_str());
 
     return HRESULT_FROM_WIN32(ERROR_SET_NOT_FOUND);
 }
 
 STDMETHODIMP_(NTSTATUS) MediaStream::KsMethod(PKSMETHOD method, ULONG length, LPVOID data, ULONG dataLength, ULONG* bytesReturned)
 {
-    WINTRACE(L"MediaStream::KsMethod len:%u data:%p dataLength:%u", length, data, dataLength);
     RETURN_HR_IF_NULL(E_POINTER, method);
     RETURN_HR_IF_NULL(E_POINTER, bytesReturned);
     winrt::slim_lock_guard lock(_lock);
-
-    WINTRACE(L"MediaStream::KsMethod method:%s", PKSIDENTIFIER_ToString(method, length).c_str());
 
     return HRESULT_FROM_WIN32(ERROR_SET_NOT_FOUND);
 }
 
 STDMETHODIMP_(NTSTATUS) MediaStream::KsEvent(PKSEVENT evt, ULONG length, LPVOID data, ULONG dataLength, ULONG* bytesReturned)
 {
-    WINTRACE(L"MediaStream::KsEvent evt:%p len:%u data:%p dataLength:%u", evt, length, data, dataLength);
     RETURN_HR_IF_NULL(E_POINTER, bytesReturned);
     winrt::slim_lock_guard lock(_lock);
 
-    WINTRACE(L"MediaStream::KsEvent event:%s", PKSIDENTIFIER_ToString(evt, length).c_str());
     return HRESULT_FROM_WIN32(ERROR_SET_NOT_FOUND);
 }

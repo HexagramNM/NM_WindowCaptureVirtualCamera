@@ -1,7 +1,7 @@
 ﻿
 #include "pch.h"
 #include "Undocumented.h"
-#include "MFTools.h"
+#include "Tools.h"
 #include "MediaSource.h"
 
 HRESULT MediaSource::Initialize(IMFAttributes* attributes)
@@ -35,7 +35,6 @@ HRESULT MediaSource::Initialize(IMFAttributes* attributes)
     }
     catch (...)
     {
-        WINTRACE(L"MediaSource::Initialize no AppX");
     }
 
     auto streams = wil::make_unique_cotaskmem_array<wil::com_ptr_nothrow<IMFStreamDescriptor>>(_streams.size());
@@ -71,7 +70,6 @@ int MediaSource::GetStreamIndexById(DWORD id)
 // IMFMediaEventGenerator
 STDMETHODIMP MediaSource::BeginGetEvent(IMFAsyncCallback* pCallback, IUnknown* punkState)
 {
-    WINTRACE(L"MediaSource::BeginGetEvent pCallback:%p punkState:%p", pCallback, punkState);
     winrt::slim_lock_guard lock(_lock);
     RETURN_HR_IF(MF_E_SHUTDOWN, !_queue);
 
@@ -81,7 +79,6 @@ STDMETHODIMP MediaSource::BeginGetEvent(IMFAsyncCallback* pCallback, IUnknown* p
 
 STDMETHODIMP MediaSource::EndGetEvent(IMFAsyncResult* pResult, IMFMediaEvent** ppEvent)
 {
-    WINTRACE(L"MediaSource::EndGetEvent");
     RETURN_HR_IF_NULL(E_POINTER, ppEvent);
     *ppEvent = nullptr;
     winrt::slim_lock_guard lock(_lock);
@@ -93,7 +90,6 @@ STDMETHODIMP MediaSource::EndGetEvent(IMFAsyncResult* pResult, IMFMediaEvent** p
 
 STDMETHODIMP MediaSource::GetEvent(DWORD dwFlags, IMFMediaEvent** ppEvent)
 {
-    WINTRACE(L"MediaSource::GetEvent");
     RETURN_HR_IF_NULL(E_POINTER, ppEvent);
     *ppEvent = nullptr;
     winrt::slim_lock_guard lock(_lock);
@@ -105,7 +101,6 @@ STDMETHODIMP MediaSource::GetEvent(DWORD dwFlags, IMFMediaEvent** ppEvent)
 
 STDMETHODIMP MediaSource::QueueEvent(MediaEventType met, REFGUID guidExtendedType, HRESULT hrStatus, const PROPVARIANT* pvValue)
 {
-    WINTRACE(L"MediaSource::QueueEvent");
     winrt::slim_lock_guard lock(_lock);
     RETURN_HR_IF(MF_E_SHUTDOWN, !_queue);
 
@@ -116,7 +111,6 @@ STDMETHODIMP MediaSource::QueueEvent(MediaEventType met, REFGUID guidExtendedTyp
 // IMFMediaSource
 STDMETHODIMP MediaSource::CreatePresentationDescriptor(IMFPresentationDescriptor** ppPresentationDescriptor)
 {
-    WINTRACE(L"MediaSource::CreatePresentationDescriptor");
     RETURN_HR_IF_NULL(E_POINTER, ppPresentationDescriptor);
     *ppPresentationDescriptor = nullptr;
     winrt::slim_lock_guard lock(_lock);
@@ -128,7 +122,6 @@ STDMETHODIMP MediaSource::CreatePresentationDescriptor(IMFPresentationDescriptor
 
 STDMETHODIMP MediaSource::GetCharacteristics(DWORD* pdwCharacteristics)
 {
-    WINTRACE(L"MediaSource::GetCharacteristics");
     RETURN_HR_IF_NULL(E_POINTER, pdwCharacteristics);
 
     *pdwCharacteristics = MFMEDIASOURCE_IS_LIVE;
@@ -137,13 +130,11 @@ STDMETHODIMP MediaSource::GetCharacteristics(DWORD* pdwCharacteristics)
 
 STDMETHODIMP MediaSource::Pause()
 {
-    WINTRACE(L"MediaSource::Pause");
     RETURN_HR(MF_E_INVALID_STATE_TRANSITION);
 }
 
 STDMETHODIMP MediaSource::Shutdown()
 {
-    WINTRACE(L"MediaSource::Shutdown");
     winrt::slim_lock_guard lock(_lock);
     RETURN_HR_IF(MF_E_SHUTDOWN, !_queue);
 
@@ -162,7 +153,6 @@ STDMETHODIMP MediaSource::Shutdown()
 
 STDMETHODIMP MediaSource::Start(IMFPresentationDescriptor* pPresentationDescriptor, const GUID* pguidTimeFormat, const PROPVARIANT* pvarStartPosition)
 {
-    WINTRACE(L"MediaSource::Start pPresentationDescriptor:%p pguidTimeFormat:%p pvarStartPosition:%p", pPresentationDescriptor, pguidTimeFormat, pvarStartPosition);
     RETURN_HR_IF_NULL(E_POINTER, pPresentationDescriptor);
     RETURN_HR_IF_NULL(E_POINTER, pvarStartPosition);
     RETURN_HR_IF_MSG(E_INVALIDARG, pguidTimeFormat && *pguidTimeFormat != GUID_NULL, "Unsupported guid time format");
@@ -203,7 +193,6 @@ STDMETHODIMP MediaSource::Start(IMFPresentationDescriptor* pPresentationDescript
             thisSelected = TRUE;
         }
 
-        WINTRACE(L"MediaSource::Start stream[%i] selected:%i thisSelected:%i", index, selected, thisSelected);
         if (selected != thisSelected)
         {
             if (selected)
@@ -235,7 +224,6 @@ STDMETHODIMP MediaSource::Start(IMFPresentationDescriptor* pPresentationDescript
 
 STDMETHODIMP MediaSource::Stop()
 {
-    WINTRACE(L"MediaSource::Stop");
     winrt::slim_lock_guard lock(_lock);
     RETURN_HR_IF(MF_E_SHUTDOWN, !_queue || !_descriptor);
 
@@ -255,7 +243,6 @@ STDMETHODIMP MediaSource::Stop()
 // IMFMediaSourceEx
 STDMETHODIMP MediaSource::GetSourceAttributes(IMFAttributes** ppAttributes)
 {
-    WINTRACE(L"MediaSource::GetSourceAttributes");
     RETURN_HR_IF_NULL(E_POINTER, ppAttributes);
     winrt::slim_lock_guard lock(_lock);
 
@@ -266,17 +253,14 @@ STDMETHODIMP MediaSource::GetSourceAttributes(IMFAttributes** ppAttributes)
 // IMFMediaSource2
 STDMETHODIMP MediaSource::SetMediaType(DWORD dwStreamID, IMFMediaType* pMediaType)
 {
-    WINTRACE(L"MediaSource::SetMediaType dwStreamId:%u pMediaType:%p", dwStreamID, pMediaType);
     RETURN_HR_IF_NULL(E_POINTER, pMediaType);
     winrt::slim_lock_guard lock(_lock);
 
-    TraceMFAttributes(pMediaType, L"MediaType");
     return S_OK;
 }
 
 STDMETHODIMP MediaSource::GetStreamAttributes(DWORD dwStreamIdentifier, IMFAttributes** ppAttributes)
 {
-    WINTRACE(L"MediaSource::GetStreamAttributes dwStreamIdentifier:%u", dwStreamIdentifier);
     RETURN_HR_IF_NULL(E_POINTER, ppAttributes);
     *ppAttributes = nullptr;
     winrt::slim_lock_guard lock(_lock);
@@ -288,7 +272,6 @@ STDMETHODIMP MediaSource::GetStreamAttributes(DWORD dwStreamIdentifier, IMFAttri
 
 STDMETHODIMP MediaSource::SetD3DManager(IUnknown* pManager)
 {
-    WINTRACE(L"MediaSource::SetD3DManager pManager:%p", pManager);
     RETURN_HR_IF_NULL(E_POINTER, pManager);
     winrt::slim_lock_guard lock(_lock);
 
@@ -305,14 +288,12 @@ STDMETHODIMP MediaSource::GetService(REFGUID siid, REFIID iid, LPVOID* ppvObject
     if (iid == __uuidof(IMFDeviceController) || iid == __uuidof(IMFDeviceController2))
         return MF_E_UNSUPPORTED_SERVICE;
 
-    WINTRACE(L"MediaSource::GetService siid '%s' iid '%s' failed", GUID_ToStringW(siid).c_str(), GUID_ToStringW(iid).c_str());
     RETURN_HR(MF_E_UNSUPPORTED_SERVICE);
 }
 
 // IMFSampleAllocatorControl
 STDMETHODIMP MediaSource::SetDefaultAllocator(DWORD dwOutputStreamID, IUnknown* pAllocator)
 {
-    WINTRACE(L"MediaSource::SetDefaultAllocator dwOutputStreamID:%u pAllocator:%p", dwOutputStreamID, pAllocator);
     RETURN_HR_IF_NULL(E_POINTER, pAllocator);
     winrt::slim_lock_guard lock(_lock);
 
@@ -325,7 +306,6 @@ STDMETHODIMP MediaSource::SetDefaultAllocator(DWORD dwOutputStreamID, IUnknown* 
 
 STDMETHODIMP MediaSource::GetAllocatorUsage(DWORD dwOutputStreamID, DWORD* pdwInputStreamID, MFSampleAllocatorUsage* peUsage)
 {
-    WINTRACE(L"MediaSource::GetAllocatorUsage dwOutputStreamID:%u pdwInputStreamID:%p peUsage:%p", dwOutputStreamID, pdwInputStreamID, peUsage);
     RETURN_HR_IF_NULL(E_POINTER, peUsage);
     RETURN_HR_IF_NULL(E_POINTER, pdwInputStreamID);
     winrt::slim_lock_guard lock(_lock);
@@ -342,41 +322,26 @@ STDMETHODIMP MediaSource::GetAllocatorUsage(DWORD dwOutputStreamID, DWORD* pdwIn
 // IKsControl
 STDMETHODIMP_(NTSTATUS) MediaSource::KsProperty(PKSPROPERTY property, ULONG length, LPVOID data, ULONG dataLength, ULONG* bytesReturned)
 {
-    WINTRACE(L"MediaSource::KsProperty len:%u data:%p dataLength:%u", length, data, dataLength);
     RETURN_HR_IF_NULL(E_POINTER, property);
     RETURN_HR_IF_NULL(E_POINTER, bytesReturned);
     winrt::slim_lock_guard lock(_lock);
-
-    WINTRACE(L"MediaSource::KsProperty prop:%s", PKSIDENTIFIER_ToString(property, length).c_str());
-
-    // right now, we don't expose any property, but this is where we'll typically be asked for
-    // 
-    // KSPROPSETID_Pin, KSPROPSETID_Topology, PROPSETID_VIDCAP_CAMERACONTROL, PROPSETID_VIDCAP_VIDEOPROCAMP
-    // PROPSETID_VIDCAP_CAMERACONTROL_REGION_OF_INTEREST, KSPROPERTYSETID_PerFrameSettingControl, KSPROPERTYSETID_ExtendedCameraControl
-    // 
-    // etc
 
     return HRESULT_FROM_WIN32(ERROR_SET_NOT_FOUND);
 }
 
 STDMETHODIMP_(NTSTATUS) MediaSource::KsMethod(PKSMETHOD method, ULONG length, LPVOID data, ULONG dataLength, ULONG* bytesReturned)
 {
-    WINTRACE(L"MediaSource::KsMethod len:%u data:%p dataLength:%u", length, data, dataLength);
     RETURN_HR_IF_NULL(E_POINTER, method);
     RETURN_HR_IF_NULL(E_POINTER, bytesReturned);
     winrt::slim_lock_guard lock(_lock);
-
-    WINTRACE(L"MediaSource::KsMethod method:%s", PKSIDENTIFIER_ToString(method, length).c_str());
 
     return HRESULT_FROM_WIN32(ERROR_SET_NOT_FOUND);
 }
 
 STDMETHODIMP_(NTSTATUS) MediaSource::KsEvent(PKSEVENT evt, ULONG length, LPVOID data, ULONG dataLength, ULONG* bytesReturned)
 {
-    WINTRACE(L"MediaSource::KsEvent evt:%p len:%u data:%p dataLength:%u", evt, length, data, dataLength);
     RETURN_HR_IF_NULL(E_POINTER, bytesReturned);
     winrt::slim_lock_guard lock(_lock);
 
-    WINTRACE(L"MediaSource::KsEvent event:%s", PKSIDENTIFIER_ToString(evt, length).c_str());
     return HRESULT_FROM_WIN32(ERROR_SET_NOT_FOUND);
 }

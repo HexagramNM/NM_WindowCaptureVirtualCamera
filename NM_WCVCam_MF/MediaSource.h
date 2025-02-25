@@ -1,9 +1,10 @@
 ﻿#pragma once
 
 #include "MediaStream.h"
+#include "CBaseMFAttributes.h"
 #include "Undocumented.h"
 
-struct MediaSource : winrt::implements<MediaSource, CBaseAttributes<IMFAttributes>, IMFMediaSourceEx, IMFGetService, IKsControl, IMFSampleAllocatorControl>
+struct MediaSource : winrt::implements<MediaSource, CBaseMFAttributes<IMFAttributes>, IMFMediaSourceEx, IMFGetService, IKsControl, IMFSampleAllocatorControl>
 {
 public:
     // IMFMediaEventGenerator
@@ -44,7 +45,6 @@ public:
     MediaSource() :
         _streams(_numStreams)
     {
-        SetBaseAttributesTraceName(L"MediaSourceAtts");
         for (auto i = 0; i < _numStreams; i++)
         {
             auto stream = winrt::make_self<MediaStream>();

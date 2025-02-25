@@ -1,8 +1,10 @@
 ﻿#pragma once
 
+#include "CBaseMFAttributes.h"
 #include "MediaSource.h"
+#include "Tools.h"
 
-struct Activator : winrt::implements<Activator, CBaseAttributes<IMFActivate>>
+struct Activator : winrt::implements<Activator, CBaseMFAttributes<IMFActivate>>
 {
 public:
     // IMFActivate
@@ -13,7 +15,6 @@ public:
 public:
     Activator()
     {
-        SetBaseAttributesTraceName(L"ActivatorAtts");
     }
 
     HRESULT Initialize();
@@ -26,7 +27,6 @@ private:
         {
             this->m_inner->AddRef();
             *object = (IMFAttributes*)this;
-            WINTRACE(L"Activator QueryInterface IMFAttributes ok");
             return S_OK;
         }
 

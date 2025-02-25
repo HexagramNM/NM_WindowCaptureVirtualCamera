@@ -1,27 +1,14 @@
 ﻿#pragma once
 
-#include "Tools.h"
-#include "EnumNames.h"
-
-void TraceMFAttributes(IUnknown* unknown, PCWSTR prefix);
-std::wstring PKSIDENTIFIER_ToString(PKSIDENTIFIER id, ULONG length);
-
 template <class IFACE = IMFAttributes>
-struct CBaseAttributes : public IFACE
+struct CBaseMFAttributes : public IFACE
 {
 protected:
     wil::com_ptr_nothrow<IMFAttributes> _attributes;
-    std::wstring _trace;
 
-    CBaseAttributes() :
-        _trace(L"Atts")
+    CBaseMFAttributes()
     {
         THROW_IF_FAILED(MFCreateAttributes(&_attributes, 0));
-    }
-
-    void SetBaseAttributesTraceName(std::wstring trace)
-    {
-        _trace = trace;
     }
 
 public:
@@ -30,7 +17,6 @@ public:
         RETURN_HR_IF(E_INVALIDARG, !value);
         assert(_attributes);
         auto hr = _attributes->GetItem(guidKey, value);
-        WINTRACE(L"%s:GetItem '%s' value:%s", _trace.c_str(), GUID_ToStringW(guidKey).c_str(), PROPVARIANT_ToString(*value).c_str());
         return hr;
     }
 
@@ -40,7 +26,6 @@ public:
         *pType = (MF_ATTRIBUTE_TYPE)0;
         assert(_attributes);
         auto hr = _attributes->GetItemType(guidKey, pType);
-        WINTRACE(L"%s:GetItemType '%s' type:%s hr:0x%08X", _trace.c_str(), GUID_ToStringW(guidKey).c_str(), MF_ATTRIBUTE_TYPE_ToString(*pType).c_str(), hr);
         return hr;
     }
 
@@ -48,7 +33,6 @@ public:
     {
         RETURN_HR_IF(E_INVALIDARG, !pbResult);
         assert(_attributes);
-        WINTRACE(L"%s:CompareItem '%s'", _trace.c_str(), GUID_ToStringW(guidKey).c_str());
         return _attributes->CompareItem(guidKey, Value, pbResult);
     }
 
@@ -56,7 +40,6 @@ public:
     {
         RETURN_HR_IF(E_INVALIDARG, !pTheirs || !pbResult);
         assert(_attributes);
-        WINTRACE(L"%s:Compare", _trace.c_str());
         return _attributes->Compare(pTheirs, MatchType, pbResult);
     }
 
@@ -66,7 +49,6 @@ public:
         *punValue = 0;
         assert(_attributes);
         auto hr = _attributes->GetUINT32(guidKey, punValue);
-        WINTRACE(L"%s:GetUINT32 '%s' hr:0x%08X value:%u/0x%08X", _trace.c_str(), GUID_ToStringW(guidKey).c_str(), hr, *punValue, *punValue);
         return hr;
     }
 
@@ -76,7 +58,6 @@ public:
         *punValue = 0;
         assert(_attributes);
         auto hr = _attributes->GetUINT64(guidKey, punValue);
-        WINTRACE(L"%s:GetUINT64 '%s' hr:0x%08X value:%I64i/0x%016X", _trace.c_str(), GUID_ToStringW(guidKey).c_str(), hr, *punValue, *punValue);
         return hr;
     }
 
@@ -86,7 +67,6 @@ public:
         *pfValue = 0;
         assert(_attributes);
         auto hr = _attributes->GetDouble(guidKey, pfValue);
-        WINTRACE(L"%s:GetDouble '%s' hr:0x%08X", _trace.c_str(), GUID_ToStringW(guidKey).c_str(), hr);
         return hr;
     }
 
@@ -96,7 +76,6 @@ public:
         ZeroMemory(pguidValue, 16);
         assert(_attributes);
         auto hr = _attributes->GetGUID(guidKey, pguidValue);
-        WINTRACE(L"%s:GetGUID '%s' hr:0x%08X value:'%s'", _trace.c_str(), GUID_ToStringW(guidKey).c_str(), hr, GUID_ToStringW(*pguidValue).c_str());
         return hr;
     }
 
@@ -106,14 +85,12 @@ public:
         *pcchLength = 0;
         assert(_attributes);
         auto hr = _attributes->GetStringLength(guidKey, pcchLength);
-        WINTRACE(L"%s:GetStringLength '%s' len:%u", _trace.c_str(), GUID_ToStringW(guidKey).c_str(), *pcchLength);
         return hr;
     }
 
     STDMETHODIMP GetString(REFGUID guidKey, LPWSTR pwszValue, UINT32 cchBufSize, UINT32* pcchLength)
     {
         assert(_attributes);
-        WINTRACE(L"%s:GetString '%s'", _trace.c_str(), GUID_ToStringW(guidKey).c_str());
         return _attributes->GetString(guidKey, pwszValue, cchBufSize, pcchLength);
     }
 
@@ -124,7 +101,6 @@ public:
         *pcchLength = 0;
         assert(_attributes);
         auto hr = _attributes->GetAllocatedString(guidKey, ppwszValue, pcchLength);
-        WINTRACE(L"%s:GetAllocatedString hr:0x%08X '%s' len:%u value:'%s'", _trace.c_str(), hr, GUID_ToStringW(guidKey).c_str(), *pcchLength, ppwszValue);
         return hr;
     }
 
@@ -132,14 +108,12 @@ public:
     {
         RETURN_HR_IF(E_INVALIDARG, !pcbBlobSize);
         assert(_attributes);
-        WINTRACE(L"%s:GetBlobSize '%s'", _trace.c_str(), GUID_ToStringW(guidKey).c_str());
         return _attributes->GetBlobSize(guidKey, pcbBlobSize);
     }
 
     STDMETHODIMP GetBlob(REFGUID guidKey, UINT8* pBuf, UINT32 cbBufSize, UINT32* pcbBlobSize)
     {
         assert(_attributes);
-        WINTRACE(L"%s:GetBlob '%s'", _trace.c_str(), GUID_ToStringW(guidKey).c_str());
         return _attributes->GetBlob(guidKey, pBuf, cbBufSize, pcbBlobSize);
     }
 
@@ -147,7 +121,6 @@ public:
     {
         RETURN_HR_IF(E_INVALIDARG, !ppBuf || !pcbSize);
         assert(_attributes);
-        WINTRACE(L"%s:GetAllocatedBlob '%s'", _trace.c_str(), GUID_ToStringW(guidKey).c_str());
         return _attributes->GetAllocatedBlob(guidKey, ppBuf, pcbSize);
     }
 
@@ -156,92 +129,78 @@ public:
         RETURN_HR_IF(E_INVALIDARG, !ppv);
         assert(_attributes);
         auto hr = _attributes->GetUnknown(guidKey, riid, ppv);
-        WINTRACE(L"%s:GetUnknown hr:0x%08X '%s' riid:'%s' %p", _trace.c_str(), hr, GUID_ToStringW(guidKey).c_str(), GUID_ToStringW(riid).c_str(), *ppv);
         return hr;
     }
 
     STDMETHODIMP SetItem(REFGUID guidKey, REFPROPVARIANT value)
     {
         assert(_attributes);
-        auto v = PROPVARIANT_ToString(value);
-        WINTRACE(L"%s:SetItem '%s' value:%s", _trace.c_str(), GUID_ToStringW(guidKey).c_str(), v.c_str());
         return _attributes->SetItem(guidKey, value);
     }
 
     STDMETHODIMP DeleteItem(REFGUID guidKey)
     {
         assert(_attributes);
-        WINTRACE(L"%s:DeleteItem '%s'", _trace.c_str(), GUID_ToStringW(guidKey).c_str());
         return _attributes->DeleteItem(guidKey);
     }
 
     STDMETHODIMP DeleteAllItems()
     {
         assert(_attributes);
-        WINTRACE(L"%s:DeleteAllItems", _trace.c_str());
         return _attributes->DeleteAllItems();
     }
 
     STDMETHODIMP SetUINT32(REFGUID guidKey, UINT32 value)
     {
         assert(_attributes);
-        WINTRACE(L"%s:SetUINT32 '%s' value:%u", _trace.c_str(), GUID_ToStringW(guidKey).c_str(), value);
         return _attributes->SetUINT32(guidKey, value);
     }
 
     STDMETHODIMP SetUINT64(REFGUID guidKey, UINT64 value)
     {
         assert(_attributes);
-        WINTRACE(L"%s:SetUINT64 '%s' value:%I64i", _trace.c_str(), GUID_ToStringW(guidKey).c_str(), value);
         return _attributes->SetUINT64(guidKey, value);
     }
 
     STDMETHODIMP SetDouble(REFGUID guidKey, double value)
     {
         assert(_attributes);
-        WINTRACE(L"%s:SetDouble '%s'", _trace.c_str(), GUID_ToStringW(guidKey).c_str());
         return _attributes->SetDouble(guidKey, value);
     }
 
     STDMETHODIMP SetGUID(REFGUID guidKey, REFGUID value)
     {
         assert(_attributes);
-        WINTRACE(L"%s:SetGUID '%s' value:'%s'", _trace.c_str(), GUID_ToStringW(guidKey).c_str(), GUID_ToStringW(value).c_str());
         return _attributes->SetGUID(guidKey, value);
     }
 
     STDMETHODIMP SetString(REFGUID guidKey, LPCWSTR value)
     {
         assert(_attributes);
-        WINTRACE(L"%s:SetString '%s' value:'%s'", _trace.c_str(), GUID_ToStringW(guidKey).c_str(), value);
         return _attributes->SetString(guidKey, value);
     }
 
     STDMETHODIMP SetBlob(REFGUID guidKey, const UINT8* pBuf, UINT32 cbBufSize)
     {
         assert(_attributes);
-        WINTRACE(L"%s:SetBlob '%s'", _trace.c_str(), GUID_ToStringW(guidKey).c_str());
         return _attributes->SetBlob(guidKey, pBuf, cbBufSize);
     }
 
     STDMETHODIMP SetUnknown(REFGUID guidKey, IUnknown* value)
     {
         assert(_attributes);
-        WINTRACE(L"%s:SetUnknown '%s' value:%p", _trace.c_str(), GUID_ToStringW(guidKey).c_str(), value);
         return _attributes->SetUnknown(guidKey, value);
     }
 
     STDMETHODIMP LockStore()
     {
         assert(_attributes);
-        WINTRACE(L"%s:LockStore", _trace.c_str());
         return _attributes->LockStore();
     }
 
     STDMETHODIMP UnlockStore()
     {
         assert(_attributes);
-        WINTRACE(L"%s:UnlockStore", _trace.c_str());
         return _attributes->UnlockStore();
     }
 
@@ -250,14 +209,12 @@ public:
         RETURN_HR_IF(E_INVALIDARG, !pcItems);
         assert(_attributes);
         auto hr = _attributes->GetCount(pcItems);
-        WINTRACE(L"%s:GetCount %u hr:0x%08X", _trace.c_str(), *pcItems, hr);
         return hr;
     }
 
     STDMETHODIMP GetItemByIndex(UINT32 unIndex, GUID* pguidKey, PROPVARIANT* pValue)
     {
         assert(_attributes);
-        WINTRACE(L"%s:GetItemByIndex %u", _trace.c_str(), unIndex);
         return _attributes->GetItemByIndex(unIndex, pguidKey, pValue);
     }
 
@@ -265,7 +222,6 @@ public:
     {
         RETURN_HR_IF(E_INVALIDARG, !pDest);
         assert(_attributes);
-        WINTRACE(L"%s:CopyAllItems", _trace.c_str());
         return _attributes->CopyAllItems(pDest);
     }
 
