@@ -17,18 +17,7 @@ NMVCamPin::NMVCamPin(HRESULT *phr, NMVCamSource *pFilter) : CSourceStream(NAME("
 {
     GetMediaType(&m_mt);
 
-    CreateDirectXDeviceForTexture();
-    SetupSampleFormatter();
-    SetupPlaceholder();
-    DrawPlaceholder();
-}
-
-NMVCamPin::~NMVCamPin() 
-{
-}
-
-void NMVCamPin::CreateDirectXDeviceForTexture()
-{
+    // placeholderの画像データをつくるために、デフォルトのDirectXデバイスを作成
     UINT createDeviceFlags = D3D11_CREATE_DEVICE_BGRA_SUPPORT;
 #ifdef _DEBUG
     createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
@@ -43,27 +32,88 @@ void NMVCamPin::CreateDirectXDeviceForTexture()
         nullptr, createDeviceFlags, d3dFeatures, 1, D3D11_SDK_VERSION,
         device.put(), nullptr, _dxDeviceContext.put()));
     device->QueryInterface(IID_PPV_ARGS(_dxDevice.put()));
+
+    SetupSampleFormatter();
+    SetupPlaceholder();
+    DrawPlaceholder();
+    CD3D11_SHADER_RESOURCE_VIEW_DESC shaderResourceViewDesc(D3D11_SRV_DIMENSION_TEXTURE2D, DXGI_FORMAT_B8G8R8A8_UNORM);
+    _dxDevice->CreateShaderResourceView(_placeholderTexture.get(),
+        &shaderResourceViewDesc, _formatterSRV.put());
+    GetSampleOnCaptureWindow(_placeholderBitmapData);
+}
+
+NMVCamPin::~NMVCamPin() 
+{
 }
 
 // ハンドルから共有されたテクスチャを取得
 void NMVCamPin::GetSharedTextureFromHandle()
 {
     winrt::com_ptr<ID3D11Texture2D> tempCaptureWindowTexture = nullptr;
-    _dxDevice->OpenSharedResourceByName(SHARED_CAPTURE_WINDOW_TEXTURE_PATH,
-        DXGI_SHARED_RESOURCE_READ, IID_PPV_ARGS(tempCaptureWindowTexture.put()));
+    if (_sharedCaptureWindowTexture == nullptr) {
+        // 共有テクスチャを取得できるデバイスを探し、見つかればテクスチャやデバイスコンテキストを作成
+        UINT createDeviceFlags = D3D11_CREATE_DEVICE_BGRA_SUPPORT;
+#ifdef _DEBUG
+        createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
+#endif
+
+        com_ptr<IDXGIFactory1> factory(nullptr);
+        com_ptr<IDXGIAdapter1> adapter(nullptr);
+        com_ptr<ID3D11Device> device(nullptr);
+        D3D_FEATURE_LEVEL d3dFeatures[7] = {
+            D3D_FEATURE_LEVEL_11_1
+        };
+        
+        UINT adapterIdx = 0;
+        HRESULT hr = S_OK;
+        if (CreateDXGIFactory1(IID_PPV_ARGS(factory.put())) != S_OK)
+        {
+            return;
+        }
+        while (factory->EnumAdapters1(adapterIdx, adapter.put()) != DXGI_ERROR_NOT_FOUND)
+        {
+            hr = D3D11CreateDevice(adapter.get(), D3D_DRIVER_TYPE_UNKNOWN,
+                nullptr, createDeviceFlags, d3dFeatures, 1, D3D11_SDK_VERSION,
+                device.put(), nullptr, _dxDeviceContext.put());
+            if (hr != S_OK) 
+            {
+                adapterIdx++;
+                continue;
+            }
+
+            hr = device->QueryInterface(IID_PPV_ARGS(_dxDevice.put()));
+            if (hr != S_OK)
+            {
+                adapterIdx++;
+                continue;
+            }
+
+            hr = _dxDevice->OpenSharedResourceByName(SHARED_CAPTURE_WINDOW_TEXTURE_PATH,
+                DXGI_SHARED_RESOURCE_READ, IID_PPV_ARGS(tempCaptureWindowTexture.put()));
+            if (hr != S_OK)
+            {
+                adapterIdx++;
+                continue;
+            }
+
+            break;
+        }
+    }
+    else {
+        _dxDevice->OpenSharedResourceByName(SHARED_CAPTURE_WINDOW_TEXTURE_PATH,
+            DXGI_SHARED_RESOURCE_READ, IID_PPV_ARGS(tempCaptureWindowTexture.put()));
+    }
 
     if (tempCaptureWindowTexture == nullptr)
     {
         _sharedCaptureWindowTexture = nullptr;
-        CD3D11_SHADER_RESOURCE_VIEW_DESC shaderResourceViewDesc(D3D11_SRV_DIMENSION_TEXTURE2D, DXGI_FORMAT_B8G8R8A8_UNORM);
-        _dxDevice->CreateShaderResourceView(_placeholderTexture.get(),
-            &shaderResourceViewDesc, _formatterSRV.put());
     }
     else
     {
         if (_sharedCaptureWindowTexture == nullptr)
         {
             _sharedCaptureWindowTexture = tempCaptureWindowTexture;
+            SetupSampleFormatter();
         }
 
         // ここのmutexはGetSampleOnCaptureWindowでReleaseしている。
@@ -324,7 +374,14 @@ HRESULT NMVCamPin::FillBuffer(IMediaSample *pSample)
     m_pFilter->StreamTime(ref);
 
     GetSharedTextureFromHandle();
-    GetSampleOnCaptureWindow(pSampleData);
+
+    if (_sharedCaptureWindowTexture) {
+        GetSampleOnCaptureWindow(pSampleData);
+    }
+    else {
+        CopyMemory((PVOID)pSampleData, (PVOID)_placeholderBitmapData,
+            VCAM_VIDEO_WIDTH * VCAM_VIDEO_HEIGHT * PIXEL_BYTE);
+    }
 
     const REFERENCE_TIME delta=_rtFrameLength;
     REFERENCE_TIME start_time=ref;

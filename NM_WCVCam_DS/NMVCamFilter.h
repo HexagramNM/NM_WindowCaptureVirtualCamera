@@ -160,8 +160,7 @@ private:
     com_ptr<IDWriteFactory> _placeholderDWFactory;
     com_ptr<IDWriteTextFormat> _placeholderTextFormat;
     com_ptr<ID2D1SolidColorBrush> _placeholderBrush;
-
-    void CreateDirectXDeviceForTexture();
+    BYTE _placeholderBitmapData[VCAM_VIDEO_WIDTH * VCAM_VIDEO_HEIGHT * PIXEL_BYTE];
 
     void GetSharedTextureFromHandle();
 

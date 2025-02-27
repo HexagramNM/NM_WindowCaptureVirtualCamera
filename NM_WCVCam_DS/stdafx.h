@@ -23,6 +23,9 @@
 #include <d3d11_4.h>
 #pragma comment(lib, "d3d11.lib")
 
+#include <dxgi.h>
+#pragma comment(lib, "dxgi.lib")
+
 #include <d2d1.h>
 #pragma comment(lib, "d2d1.lib")
 
