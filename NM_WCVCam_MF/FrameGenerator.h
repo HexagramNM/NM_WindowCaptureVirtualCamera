@@ -18,8 +18,6 @@ class FrameGenerator
 
     HRESULT SetupD3D11Device();
 
-    HRESULT CreateSharedCaptureWindowTexture();
-
     HRESULT SetupNV12Converter();
 
 public:

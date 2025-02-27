@@ -14,14 +14,45 @@ HRESULT FrameGenerator::SetupD3D11Device()
     createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
 #endif
 
+    wil::com_ptr_nothrow <IDXGIFactory1> factory;
+    wil::com_ptr_nothrow <IDXGIAdapter1> adapter;
     wil::com_ptr_nothrow<ID3D11Device> device;
     D3D_FEATURE_LEVEL d3dFeatures[7] = {
         D3D_FEATURE_LEVEL_11_1
     };
 
-    RETURN_IF_FAILED(D3D11CreateDevice(nullptr, D3D_DRIVER_TYPE_HARDWARE,
-        nullptr, createDeviceFlags, d3dFeatures, 1, D3D11_SDK_VERSION,
-        device.put(), nullptr, _dxDeviceContext.put()));
+    UINT adapterIdx = 0;
+    HRESULT hr = S_OK;
+    RETURN_IF_FAILED(CreateDXGIFactory1(IID_PPV_ARGS(factory.put())));
+    while (factory->EnumAdapters1(adapterIdx, adapter.put()) != DXGI_ERROR_NOT_FOUND) 
+    {
+        hr = D3D11CreateDevice(adapter.get(), D3D_DRIVER_TYPE_UNKNOWN,
+            nullptr, createDeviceFlags, d3dFeatures, 1, D3D11_SDK_VERSION,
+            device.put(), nullptr, _dxDeviceContext.put());
+        if (hr != S_OK) {
+            adapterIdx++;
+            continue;
+        }
+
+        hr = device->QueryInterface(IID_PPV_ARGS(_dxDevice.put()));
+        if (hr != S_OK) {
+            adapterIdx++;
+            continue;
+        }
+
+        // キャプチャウィンドウの共有テクスチャをハンドルから取得。
+        hr = _dxDevice->OpenSharedResourceByName(
+            SHARED_CAPTURE_WINDOW_TEXTURE_PATH, DXGI_SHARED_RESOURCE_READ,
+            IID_PPV_ARGS(_sharedCaptureWindowTexture.put()));
+        if (hr != S_OK) {
+            adapterIdx++;
+            continue;
+        }
+
+        break;
+    }
+
+    RETURN_IF_FAILED(hr);
     
     // マルチスレッドの設定は無くても大丈夫そうだが念のため
     wil::com_ptr_nothrow<ID3D11Multithread> dxMultiThread;
@@ -29,8 +60,6 @@ HRESULT FrameGenerator::SetupD3D11Device()
     dxMultiThread->SetMultithreadProtected(true);
 
     _dxgiManager->ResetDevice(device.get(), resetToken);
-
-    device->QueryInterface(IID_PPV_ARGS(_dxDevice.put()));
 
     // 共有テクスチャをそのままMediaFoundationのサンプルに渡すことはできなかったので、
     // バッファとなる別テクスチャに一旦コピー（MiscFlags設定が原因だと思われる。）
@@ -47,21 +76,6 @@ HRESULT FrameGenerator::SetupD3D11Device()
     bufferTextureDesc.SampleDesc.Quality = 0;
     bufferTextureDesc.Usage = D3D11_USAGE_DEFAULT;
     device->CreateTexture2D(&bufferTextureDesc, 0, _bufferTexture.put());
-
-    return S_OK;
-}
-
-// キャプチャウィンドウの共有テクスチャをハンドルから取得。
-HRESULT FrameGenerator::CreateSharedCaptureWindowTexture()
-{
-    if (_sharedCaptureWindowTexture != nullptr)
-    {
-        return S_OK;
-    }
-
-    RETURN_IF_FAILED(_dxDevice->OpenSharedResourceByName(
-        SHARED_CAPTURE_WINDOW_TEXTURE_PATH, DXGI_SHARED_RESOURCE_READ,
-        IID_PPV_ARGS(_sharedCaptureWindowTexture.put())));
 
     return S_OK;
 }
@@ -107,8 +121,6 @@ HRESULT FrameGenerator::EnsureRenderTarget(UINT width, UINT height)
 
         RETURN_IF_FAILED(SetupD3D11Device());
 
-        RETURN_IF_FAILED(CreateSharedCaptureWindowTexture());
-
         RETURN_IF_FAILED(SetupNV12Converter());
     }
 
@@ -119,6 +131,9 @@ HRESULT FrameGenerator::Generate(IMFSample* sample, REFGUID format, IMFSample** 
 {
     RETURN_HR_IF_NULL(E_POINTER, sample);
     RETURN_HR_IF_NULL(E_POINTER, outSample);
+    RETURN_HR_IF_NULL(E_POINTER, _dxDeviceContext.get());
+    RETURN_HR_IF_NULL(E_POINTER, _sharedCaptureWindowTexture.get());
+    RETURN_HR_IF_NULL(E_POINTER, _bufferTexture.get());
     *outSample = nullptr;
 
     wil::com_ptr_nothrow<IMFMediaBuffer> mediaBuffer;

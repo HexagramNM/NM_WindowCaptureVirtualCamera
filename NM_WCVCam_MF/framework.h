@@ -25,6 +25,7 @@
 #include <ksmedia.h>
 #include <dxgi.h>
 #include <d3d11.h>
+#include <dxgi.h>
 #include <uuids.h>
 
 // std
@@ -39,3 +40,4 @@
 #include "winrt/Windows.ApplicationModel.h"
 
 #pragma comment(lib, "mfsensorgroup")
+#pragma comment(lib, "dxgi.lib")
