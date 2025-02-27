@@ -155,20 +155,15 @@ private:
     com_ptr<ID3D11Buffer> _cpuSampleBuffer;
 
     com_ptr<ID3D11Texture2D> _placeholderTexture;
-    com_ptr<ID2D1Factory> _placeholderD2DFactory;
-    com_ptr<ID2D1RenderTarget> _placeholderRenderTarget;
-    com_ptr<IDWriteFactory> _placeholderDWFactory;
-    com_ptr<IDWriteTextFormat> _placeholderTextFormat;
-    com_ptr<ID2D1SolidColorBrush> _placeholderBrush;
     BYTE _placeholderBitmapData[VCAM_VIDEO_WIDTH * VCAM_VIDEO_HEIGHT * PIXEL_BYTE];
+
+    void FindDeviceAndGetSharedTexture(ID3D11Texture2D** sharedTexture);
 
     void GetSharedTextureFromHandle();
 
     void SetupSampleFormatter();
 
-    void SetupPlaceholder();
-
-    void DrawPlaceholder();
+    void SetupPlaceholderTexture();
 
     void GetSampleOnCaptureWindow(LPBYTE sampleData);
 

@@ -34,8 +34,7 @@ NMVCamPin::NMVCamPin(HRESULT *phr, NMVCamSource *pFilter) : CSourceStream(NAME("
     device->QueryInterface(IID_PPV_ARGS(_dxDevice.put()));
 
     SetupSampleFormatter();
-    SetupPlaceholder();
-    DrawPlaceholder();
+    SetupPlaceholderTexture();
     CD3D11_SHADER_RESOURCE_VIEW_DESC shaderResourceViewDesc(D3D11_SRV_DIMENSION_TEXTURE2D, DXGI_FORMAT_B8G8R8A8_UNORM);
     _dxDevice->CreateShaderResourceView(_placeholderTexture.get(),
         &shaderResourceViewDesc, _formatterSRV.put());
@@ -46,58 +45,63 @@ NMVCamPin::~NMVCamPin()
 {
 }
 
+void NMVCamPin::FindDeviceAndGetSharedTexture(ID3D11Texture2D** sharedTexture)
+{
+    // 共有テクスチャを取得できるデバイスを探し、見つかればテクスチャやデバイスコンテキストを作成
+    UINT createDeviceFlags = D3D11_CREATE_DEVICE_BGRA_SUPPORT;
+#ifdef _DEBUG
+    createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
+#endif
+
+    com_ptr<IDXGIFactory1> factory(nullptr);
+    com_ptr<IDXGIAdapter1> adapter(nullptr);
+    com_ptr<ID3D11Device> device(nullptr);
+    D3D_FEATURE_LEVEL d3dFeatures[7] = {
+        D3D_FEATURE_LEVEL_11_1
+    };
+
+    UINT adapterIdx = 0;
+    HRESULT hr = S_OK;
+    if (CreateDXGIFactory1(IID_PPV_ARGS(factory.put())) != S_OK)
+    {
+        return;
+    }
+    while (factory->EnumAdapters1(adapterIdx, adapter.put()) != DXGI_ERROR_NOT_FOUND)
+    {
+        hr = D3D11CreateDevice(adapter.get(), D3D_DRIVER_TYPE_UNKNOWN,
+            nullptr, createDeviceFlags, d3dFeatures, 1, D3D11_SDK_VERSION,
+            device.put(), nullptr, _dxDeviceContext.put());
+        if (hr != S_OK)
+        {
+            adapterIdx++;
+            continue;
+        }
+
+        hr = device->QueryInterface(IID_PPV_ARGS(_dxDevice.put()));
+        if (hr != S_OK)
+        {
+            adapterIdx++;
+            continue;
+        }
+
+        hr = _dxDevice->OpenSharedResourceByName(SHARED_CAPTURE_WINDOW_TEXTURE_PATH,
+            DXGI_SHARED_RESOURCE_READ, IID_PPV_ARGS(sharedTexture));
+        if (hr != S_OK)
+        {
+            adapterIdx++;
+            continue;
+        }
+
+        break;
+    }
+}
+
 // ハンドルから共有されたテクスチャを取得
 void NMVCamPin::GetSharedTextureFromHandle()
 {
     winrt::com_ptr<ID3D11Texture2D> tempCaptureWindowTexture = nullptr;
     if (_sharedCaptureWindowTexture == nullptr) {
-        // 共有テクスチャを取得できるデバイスを探し、見つかればテクスチャやデバイスコンテキストを作成
-        UINT createDeviceFlags = D3D11_CREATE_DEVICE_BGRA_SUPPORT;
-#ifdef _DEBUG
-        createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
-#endif
-
-        com_ptr<IDXGIFactory1> factory(nullptr);
-        com_ptr<IDXGIAdapter1> adapter(nullptr);
-        com_ptr<ID3D11Device> device(nullptr);
-        D3D_FEATURE_LEVEL d3dFeatures[7] = {
-            D3D_FEATURE_LEVEL_11_1
-        };
-        
-        UINT adapterIdx = 0;
-        HRESULT hr = S_OK;
-        if (CreateDXGIFactory1(IID_PPV_ARGS(factory.put())) != S_OK)
-        {
-            return;
-        }
-        while (factory->EnumAdapters1(adapterIdx, adapter.put()) != DXGI_ERROR_NOT_FOUND)
-        {
-            hr = D3D11CreateDevice(adapter.get(), D3D_DRIVER_TYPE_UNKNOWN,
-                nullptr, createDeviceFlags, d3dFeatures, 1, D3D11_SDK_VERSION,
-                device.put(), nullptr, _dxDeviceContext.put());
-            if (hr != S_OK) 
-            {
-                adapterIdx++;
-                continue;
-            }
-
-            hr = device->QueryInterface(IID_PPV_ARGS(_dxDevice.put()));
-            if (hr != S_OK)
-            {
-                adapterIdx++;
-                continue;
-            }
-
-            hr = _dxDevice->OpenSharedResourceByName(SHARED_CAPTURE_WINDOW_TEXTURE_PATH,
-                DXGI_SHARED_RESOURCE_READ, IID_PPV_ARGS(tempCaptureWindowTexture.put()));
-            if (hr != S_OK)
-            {
-                adapterIdx++;
-                continue;
-            }
-
-            break;
-        }
+        FindDeviceAndGetSharedTexture(tempCaptureWindowTexture.put());
     }
     else {
         _dxDevice->OpenSharedResourceByName(SHARED_CAPTURE_WINDOW_TEXTURE_PATH,
@@ -180,9 +184,9 @@ void NMVCamPin::SetupSampleFormatter()
     _dxDeviceContext->CSSetUnorderedAccessViews(0, 1, uavs, initialCounts);
 }
 
-// "No Signal"表示の準備
-void NMVCamPin::SetupPlaceholder() 
+void NMVCamPin::SetupPlaceholderTexture() 
 {
+    // "No Signal"表示の準備
     D3D11_TEXTURE2D_DESC bufferTextureDesc;
     bufferTextureDesc.Width = VCAM_VIDEO_WIDTH;
     bufferTextureDesc.Height = VCAM_VIDEO_HEIGHT;
@@ -197,36 +201,38 @@ void NMVCamPin::SetupPlaceholder()
     bufferTextureDesc.Usage = D3D11_USAGE_DEFAULT;
     check_hresult(_dxDevice->CreateTexture2D(&bufferTextureDesc, 0, _placeholderTexture.put()));
 
-    D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, _placeholderD2DFactory.put());
+    com_ptr<ID2D1Factory> d2d1Factory;
+    D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, d2d1Factory.put());
     D2D1_RENDER_TARGET_PROPERTIES d2d1props = D2D1::RenderTargetProperties(D2D1_RENDER_TARGET_TYPE_DEFAULT,
         D2D1::PixelFormat(DXGI_FORMAT_B8G8R8A8_UNORM, D2D1_ALPHA_MODE_IGNORE));
 
     com_ptr<IDXGISurface>renderTargetSurface;
     _placeholderTexture.as(IID_PPV_ARGS(renderTargetSurface.put()));
 
-    HRESULT hr = _placeholderD2DFactory->CreateDxgiSurfaceRenderTarget(
-        renderTargetSurface.get(), &d2d1props, _placeholderRenderTarget.put());
+    com_ptr<ID2D1RenderTarget> d2d1RenderTarget;
+    HRESULT hr = d2d1Factory->CreateDxgiSurfaceRenderTarget(
+        renderTargetSurface.get(), &d2d1props, d2d1RenderTarget.put());
 
-    _placeholderRenderTarget->SetTextAntialiasMode(D2D1_TEXT_ANTIALIAS_MODE_CLEARTYPE);
+    d2d1RenderTarget->SetTextAntialiasMode(D2D1_TEXT_ANTIALIAS_MODE_CLEARTYPE);
 
+    com_ptr<IDWriteFactory> dwFactory;
     DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED, __uuidof(IDWriteFactory), 
-        reinterpret_cast<IUnknown**>(_placeholderDWFactory.put()));
+        reinterpret_cast<IUnknown**>(dwFactory.put()));
 
-    _placeholderDWFactory->CreateTextFormat(L"Arial", nullptr, DWRITE_FONT_WEIGHT_NORMAL, DWRITE_FONT_STYLE_NORMAL, 
-        DWRITE_FONT_STRETCH_NORMAL, 100, L"", _placeholderTextFormat.put());
+    com_ptr<IDWriteTextFormat> dwTextFormat;
+    dwFactory->CreateTextFormat(L"Arial", nullptr, DWRITE_FONT_WEIGHT_NORMAL, DWRITE_FONT_STYLE_NORMAL,
+        DWRITE_FONT_STRETCH_NORMAL, 100, L"", dwTextFormat.put());
 
-    _placeholderTextFormat->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_CENTER);
-    _placeholderTextFormat->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_CENTER);
+    dwTextFormat->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_CENTER);
+    dwTextFormat->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_CENTER);
 
-    _placeholderRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::White), _placeholderBrush.put());
-}
+    com_ptr<ID2D1SolidColorBrush> d2d1Brush;
+    d2d1RenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::White), d2d1Brush.put());
 
-// DirectWriteで"No Signal"の表示
-void NMVCamPin::DrawPlaceholder() 
-{
-    _placeholderRenderTarget->BeginDraw();
+    // DirectWriteで"No Signal"の表示
+    d2d1RenderTarget->BeginDraw();
 
-    _placeholderRenderTarget->Clear(D2D1::ColorF(D2D1::ColorF::Black));
+    d2d1RenderTarget->Clear(D2D1::ColorF(D2D1::ColorF::Black));
 
     std::wstring placeholderText(L"No Signal");
     D2D1_RECT_F rect;
@@ -234,10 +240,10 @@ void NMVCamPin::DrawPlaceholder()
     rect.right = VCAM_VIDEO_WIDTH - 1;
     rect.top = 0;
     rect.bottom = VCAM_VIDEO_HEIGHT - 1;
-    _placeholderRenderTarget->DrawText(placeholderText.c_str(), placeholderText.size(),
-        _placeholderTextFormat.get(), rect, _placeholderBrush.get());
+    d2d1RenderTarget->DrawText(placeholderText.c_str(), placeholderText.size(),
+        dwTextFormat.get(), rect, d2d1Brush.get());
 
-    _placeholderRenderTarget->EndDraw();
+    d2d1RenderTarget->EndDraw();
 }
 
 // コンピュートシェーダでサンプルのフォーマットにあったバッファを作成
