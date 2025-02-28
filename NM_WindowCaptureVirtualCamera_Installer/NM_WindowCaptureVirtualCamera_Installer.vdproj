@@ -663,6 +663,24 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_256A1A6B5227CB91D2BCFCBEC7421A19"
+        "OwnerKey" = "8:_40406633147E4ABDA6FFD410BBFAAEC6"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_256A1A6B5227CB91D2BCFCBEC7421A19"
+        "OwnerKey" = "8:_BFC47440DCE54366AD9EBF8C26365266"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_256A1A6B5227CB91D2BCFCBEC7421A19"
+        "OwnerKey" = "8:_6D4B457CD6AF4C68B662769717F1AE13"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_32748C7444ECC2A23A8F32EDEBEABCC4"
         "OwnerKey" = "8:_BFC47440DCE54366AD9EBF8C26365266"
         "MsmSig" = "8:_UNDEFINED"
@@ -3189,12 +3207,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_B90691F8CDF39271698F828F738A7C8B"
-        "OwnerKey" = "8:_E986681EB75F40E1B337F7F055A31829"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_BA467AB8863F435DEB4C29F563FDB2C4"
         "OwnerKey" = "8:_BFC47440DCE54366AD9EBF8C26365266"
         "MsmSig" = "8:_UNDEFINED"
@@ -3610,12 +3622,6 @@
         "Entry"
         {
         "MsmKey" = "8:_C23186C1B46983FAF8BB0D2CCF87572D"
-        "OwnerKey" = "8:_BFC47440DCE54366AD9EBF8C26365266"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_C4599BA985C34436359C880ADF9C34A4"
         "OwnerKey" = "8:_BFC47440DCE54366AD9EBF8C26365266"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -5671,6 +5677,26 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_256A1A6B5227CB91D2BCFCBEC7421A19"
+            {
+            "SourcePath" = "8:dxgi.dll"
+            "TargetName" = "8:dxgi.dll"
+            "Tag" = "8:"
+            "Folder" = "8:_966B940429D04D58B997AC79E798F0E7"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:TRUE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_32748C7444ECC2A23A8F32EDEBEABCC4"
             {
             "AssemblyRegister" = "3:1"
@@ -7339,26 +7365,6 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_C4599BA985C34436359C880ADF9C34A4"
-            {
-            "SourcePath" = "8:PROPSYS.dll"
-            "TargetName" = "8:PROPSYS.dll"
-            "Tag" = "8:"
-            "Folder" = "8:_966B940429D04D58B997AC79E798F0E7"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:TRUE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_C665B3B118B3EDCC93B5778A892ED477"
             {
             "AssemblyRegister" = "3:1"
@@ -8560,15 +8566,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:NM_WindowCaptureVirtualCamera"
-        "ProductCode" = "8:{ED12E869-009C-4DAE-BCFE-5BE288B48748}"
-        "PackageCode" = "8:{28409DB4-B269-4370-9040-BCD9FAAE296E}"
+        "ProductCode" = "8:{BF981E03-35EC-41B4-A3A5-E10FF83EBE74}"
+        "PackageCode" = "8:{0C211D2D-861D-4EF1-B8C2-4D97FBE6AF64}"
         "UpgradeCode" = "8:{343B9A40-CF2C-45AF-BE08-DEF4930371EE}"
         "AspNetVersion" = "8:"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.0.0"
+        "ProductVersion" = "8:1.0.1"
         "Manufacturer" = "8:HexagramNM"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
@@ -9176,7 +9182,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_812644DC0B2644DBBD1BFD4DFEC1DA33"
             {
-            "SourcePath" = "8:..\\InstallerAction\\obj\\Release\\InstallerAction.dll"
+            "SourcePath" = "8:"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_966B940429D04D58B997AC79E798F0E7"
@@ -9224,6 +9230,34 @@
             "ProjectOutputGroupRegister" = "3:1"
             "OutputConfiguration" = "8:Release|Any CPU"
             "OutputGroupCanonicalName" = "8:PublishItems"
+            "OutputProjectGuid" = "8:{D30232A4-3454-4703-8BEF-13E7B3E072A2}"
+            "ShowKeyOutput" = "11:TRUE"
+                "ExcludeFilters"
+                {
+                }
+            }
+            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_9E41168F41E04BA3BEBE51A1E8267840"
+            {
+            "SourcePath" = "8:"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_966B940429D04D58B997AC79E798F0E7"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            "ProjectOutputGroupRegister" = "3:1"
+            "OutputConfiguration" = "8:Release|Any CPU"
+            "OutputGroupCanonicalName" = "8:LocalizedResourceDlls"
             "OutputProjectGuid" = "8:{D30232A4-3454-4703-8BEF-13E7B3E072A2}"
             "ShowKeyOutput" = "11:TRUE"
                 "ExcludeFilters"
