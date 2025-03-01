@@ -49,7 +49,7 @@ Also, the WPF project (NM_WindowCaptureVirtualCamera) uses .NET Core 9.0.
 > - Close any applications that are using the camera.
 > - Open the Services tab in Task Manager and ensure that the two services "FrameServer" and "FrameServerMonitor" are stopped (if they are not stopped, please stop them from Task Manager).
 
-1. Download the zip file containing the installer from [here](https://github.com/HexagramNM/NM_WindowCaptureVirtualCamera/releases/download/v1.0.0/NM_WindowCaptureVirtualCamera.zip) and unzip it.
+1. Download the zip file containing the installer from [here](https://github.com/HexagramNM/NM_WindowCaptureVirtualCamera/releases/download/v1.0.1/NM_WindowCaptureVirtualCamera.zip) and unzip it.
 
 2. Run `setup.exe` in the unzipped folder.
 

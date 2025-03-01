@@ -47,7 +47,7 @@ nuget経由で[WPFDXInterop](https://github.com/microsoft/WPFDXInterop)を導入
 > - カメラを使用するアプリケーションを終了している
 > - タスクマネージャのサービスタブを開くと、"FrameServer"と"FrameServerMonitor"の2つのサービスがあり、両方停止している（停止していない場合は、タスクマネージャ上から停止させてください。）
 
-1. [こちら](https://github.com/HexagramNM/NM_WindowCaptureVirtualCamera/releases/download/v1.0.0/NM_WindowCaptureVirtualCamera.zip)からインストーラを含むzipファイルをダウンロードし、解凍してください。
+1. [こちら](https://github.com/HexagramNM/NM_WindowCaptureVirtualCamera/releases/download/v1.0.1/NM_WindowCaptureVirtualCamera.zip)からインストーラを含むzipファイルをダウンロードし、解凍してください。
 
 2. 解凍したフォルダの中にある`setup.exe`を実行します。
 
