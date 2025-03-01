@@ -13,14 +13,16 @@ The footage can be displayed as camera footage in Discord or Teams.
 
 Compared to the virtual camera of [OBS](https://obsproject.com), it has the following features:
 
-* By focusing on capturing a window and sending its footage to the virtual camera, it gets a small tool. (Its size is about 1.5MB.)
+* By focusing on capturing a window and sending its footage to the virtual camera, it gets a small tool. (Its size is about 1.2MB.)
 
 * You can easily select windows, start the virtual camera, and trim the video with simple settings.
 
 * You can use the MediaFoundation virtual camera available from Windows 11. It can also be displayed in the standard Windows camera app.
 
 > [!WARNING]
-> It has been confirmed that the MediaFoundation virtual camera does not work on Windows 11 version 24H2. Since 24H2 is currently unstable, it is difficult to determine whether the issue is with the OS or this code. We plan to address this issue once the OS stabilizes. The DirectShow virtual camera works, so if you are using this tool on 24H2, please use the DirectShow virtual camera.
+> In Windows 11 24H2, although the captured window is displayed, it has been confirmed that the screen is not being updated correctly. Since 24H2 is currently unstable, it is difficult to determine whether the issue is with the OS or this code. We plan to address this issue once the OS stabilizes. 
+
+[Update History](UpdateInfo_en.md)
 
 
 # System Requirements
@@ -40,6 +42,12 @@ Also, the WPF project (NM_WindowCaptureVirtualCamera) uses .NET Core 9.0.
 # Installation Instructions
 
 ## Using the Installer (for x64)
+
+> [!NOTE]
+> If you are using a previous version, we recommend uninstalling the previous version before reinstalling. If you update with the new version installer without uninstalling the previous version, please check the following before running the installer:
+> 
+> - Close any applications that are using the camera.
+> - Open the Services tab in Task Manager and ensure that the two services "FrameServer" and "FrameServerMonitor" are stopped (if they are not stopped, please stop them from Task Manager).
 
 1. Download the zip file containing the installer from [here](https://github.com/HexagramNM/NM_WindowCaptureVirtualCamera/releases/download/v1.0.0/NM_WindowCaptureVirtualCamera.zip) and unzip it.
 

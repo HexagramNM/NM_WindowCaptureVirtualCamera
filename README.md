@@ -2,8 +2,6 @@
 
 [English](README_en.md) 
 
-[技術的な知見をまとめたWiki](https://github.com/HexagramNM/NM_WindowCaptureVirtualCamera/wiki)
-
 ![UI_image.png](DocAssets/ja/UI_image.png)
 
 ウィンドウをキャプチャし、仮想カメラ（MediaFoundation, DirectShow）で映像を送る汎用ツールです。
@@ -11,14 +9,18 @@
 
 [OBS](https://obsproject.com)の仮想カメラと比較し、以下のような特徴があります。
 
-* ウィンドウのキャプチャと仮想カメラへの映像送信に機能を絞ることで、サイズの小さい（約1.5MB）ツールとなっています。
+* ウィンドウのキャプチャと仮想カメラへの映像送信に機能を絞ることで、サイズの小さい（約1.2MB）ツールとなっています。
 
 * 簡単な設定でウィンドウの選択や仮想カメラの起動、映像のトリミングを行うことができます。
 
 * Windows 11から使用可能なMediaFoundationの仮想カメラを使用できます。Windows標準のカメラアプリにも映し出すことができます。
 
 > [!WARNING]
-> MediaFoundationの仮想カメラについて、Windows 11の24H2で動作しないことが確認されました。24H2は現状不安定であり、OSの問題か、こちらのコードの問題か切り分けづらいため、安定してから修正対応を行う予定です。DirectShowの仮想カメラは動作するため、24H2でこのツール使用される場合はDirectShowの仮想カメラをご使用ください。
+> Windows 11の24H2ではキャプチャしたウィンドウが表示されるものの、正常に画面更新が行われていないことが確認されました。24H2は現状不安定であり、OSの問題か、こちらのコードの問題か切り分けづらいため、安定してから修正対応を行う予定です。
+
+[技術的な知見をまとめたWiki](https://github.com/HexagramNM/NM_WindowCaptureVirtualCamera/wiki)
+
+[更新履歴](UpdateInfo.md)
 
 
 # 必要環境
@@ -38,6 +40,12 @@ nuget経由で[WPFDXInterop](https://github.com/microsoft/WPFDXInterop)を導入
 # インストール方法
 
 ## インストーラを使用する場合（x64用）
+
+> [!NOTE]
+> 過去のバージョンを使用されている場合は、一度過去のバージョンのものをアンインストールしてから再インストールすることをおすすめいたします。過去のバージョンをアンインストールせずに、新しいバージョンのインストーラで更新する場合は、以下を確認してからインストーラを実行してください。
+> 
+> - カメラを使用するアプリケーションを終了している
+> - タスクマネージャのサービスタブを開くと、"FrameServer"と"FrameServerMonitor"の2つのサービスがあり、両方停止している（停止していない場合は、タスクマネージャ上から停止させてください。）
 
 1. [こちら](https://github.com/HexagramNM/NM_WindowCaptureVirtualCamera/releases/download/v1.0.0/NM_WindowCaptureVirtualCamera.zip)からインストーラを含むzipファイルをダウンロードし、解凍してください。
 
