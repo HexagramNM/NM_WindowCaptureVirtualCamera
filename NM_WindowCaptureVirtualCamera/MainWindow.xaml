@@ -9,35 +9,67 @@
         Title="NM_WindowCaptureVirtualCamera" Height="450" Width="820"
         MinHeight="360" MinWidth="656"
         MaxHeight="675" MaxWidth="1230" Closed="Window_Closed" Loaded="Window_Loaded">
-    <Grid>
-        <Image x:Name="image_windowPreview" Margin="10,10,170,60"/>
-		<Button x:Name="button_picker" Content="{x:Static strs:Resources.String_selectWindow}" Margin="0,10,10,0" VerticalAlignment="Top" Height="40" FontSize="20" Click="Button_picker_Click" HorizontalAlignment="Right" Width="150"/>
-        <Button x:Name="button_cameraStart" Content="{x:Static strs:Resources.String_startVCam}" Margin="0,60,10,0" VerticalAlignment="Top" Height="40" FontSize="20" Click="Button_cameraStart_Click" HorizontalAlignment="Right" Width="150" IsEnabled="False"/>
-        <Button x:Name="button_cameraReverse" Content="{x:Static strs:Resources.String_reverseVCam}" Margin="0,110,10,0" VerticalAlignment="Top" Height="40" FontSize="20" Click="Button_cameraReverse_Click" HorizontalAlignment="Right" Width="150" IsEnabled="False"/>
-        <Button x:Name="button_cameraStop" Content="{x:Static strs:Resources.String_stopVCam}" Margin="0,160,10,0" VerticalAlignment="Top" Height="40" FontSize="20" Click="Button_cameraStop_Click" HorizontalAlignment="Right" Width="150" IsEnabled="False"/>
-        <Viewbox Margin="10,10,170,60" Stretch="Uniform">
-            <Canvas x:Name="canvas_windowPreview" Width="640" Height="360">
-                <Rectangle x:Name="rectangle_range" Width="100" Height="100" Stroke="Red" StrokeThickness="3" Canvas.Left="270" Canvas.Top="130"/>
-                <Rectangle x:Name="rectangle_exclude" Width="640" Height="360" Fill="#7F7F7F7F">
-                    <Rectangle.OpacityMask>
-                        <VisualBrush Viewbox="0,0,640,360" Stretch="None" ViewboxUnits="Absolute">
-                            <VisualBrush.Visual>
-                                <Canvas Width="640" Height="360" >
-                                    <Rectangle x:Name="rectangle_topMargin" Width="640" Height="130" Fill="Black"/>
-                                    <Rectangle x:Name="rectangle_bottomMargin" Width="640" Height="130" Canvas.Bottom="0" Fill="Black"/>
-                                    <Rectangle x:Name="rectangle_leftMargin" Width="270" Height="360" Fill="Black"/>
-                                    <Rectangle x:Name="rectangle_rightMargin" Width="270" Height="360" Canvas.Right="0" Fill="Black"/>
-                                </Canvas>
-                            </VisualBrush.Visual>
-                        </VisualBrush>
-                    </Rectangle.OpacityMask>
-                </Rectangle>
-            </Canvas>
-        </Viewbox>
-        <Button x:Name="button_trimmingReset" Content="{x:Static strs:Resources.String_resetTrimming}" Margin="10,0,0,10" Width="180" Height="40" FontSize="20" Click="Button_trimmingReset_Click" HorizontalAlignment="Left" VerticalAlignment="Bottom" IsEnabled="False"/>
-        <Label Content="Capture FPS: " Margin="0,0,70,10" Width="120" Height="40" FontSize="20" VerticalAlignment="Bottom" HorizontalAlignment="Right"/>
-        <Label x:Name="label_captureFPS" Content="0.0" Margin="0,0,10,10" Width="60" Height="40" FontSize="20" VerticalAlignment="Bottom" HorizontalAlignment="Right"/>
-        <Rectangle Fill="#00000000" Margin="0,0,160,50" MouseLeftButtonDown="Canvas_windowPreview_MouseLeftButtonDown" Panel.ZIndex="1"/>
-        <CheckBox x:Name="checkbox_captureCursor" Content="{x:Static strs:Resources.String_captureCursor}" Margin="200,0,0,10" Width="250" Height="40" FontSize="20" HorizontalAlignment="Left" VerticalAlignment="Bottom" VerticalContentAlignment="Center" Checked="Checkbox_captureCursor_Checked" Unchecked="Checkbox_captureCursor_Unchecked" Foreground="Gray"/>
-    </Grid>
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="*" />
+			<RowDefinition Height="60" />
+		</Grid.RowDefinitions>
+		<Grid Grid.Row="0">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="*" />
+				<ColumnDefinition Width="160" />
+			</Grid.ColumnDefinitions>
+			<Grid Grid.Column="0" Margin="10,10,10,10">
+				<Image x:Name="image_windowPreview" />
+				<Viewbox Stretch="Uniform">
+					<Canvas x:Name="canvas_windowPreview" Width="640" Height="360">
+						<Rectangle x:Name="rectangle_range" Width="100" Height="100" Stroke="Red" StrokeThickness="3" Canvas.Left="270" Canvas.Top="130"/>
+						<Rectangle x:Name="rectangle_exclude" Width="640" Height="360" Fill="#7F7F7F7F">
+							<Rectangle.OpacityMask>
+								<VisualBrush Viewbox="0,0,640,360" Stretch="None" ViewboxUnits="Absolute">
+									<VisualBrush.Visual>
+										<Canvas Width="640" Height="360" >
+											<Rectangle x:Name="rectangle_topMargin" Width="640" Height="130" Fill="Black"/>
+											<Rectangle x:Name="rectangle_bottomMargin" Width="640" Height="130" Canvas.Bottom="0" Fill="Black"/>
+											<Rectangle x:Name="rectangle_leftMargin" Width="270" Height="360" Fill="Black"/>
+											<Rectangle x:Name="rectangle_rightMargin" Width="270" Height="360" Canvas.Right="0" Fill="Black"/>
+										</Canvas>
+									</VisualBrush.Visual>
+								</VisualBrush>
+							</Rectangle.OpacityMask>
+						</Rectangle>
+					</Canvas>
+				</Viewbox>
+			</Grid>
+			<Rectangle Grid.Column="0" Fill="#00000000" MouseLeftButtonDown="Canvas_windowPreview_MouseLeftButtonDown" Panel.ZIndex="1"/>
+			<StackPanel Grid.Column="1" Orientation="Vertical" Margin="0,10,10,0">
+				<Button x:Name="button_picker" Content="{x:Static strs:Resources.String_selectWindow}" 
+						Width="150" Height="40" FontSize="20" Click="Button_picker_Click" />
+				<Button x:Name="button_cameraStart" Content="{x:Static strs:Resources.String_startVCam}" Margin="0,10,0,0" 
+						Width="150" Height="40" FontSize="20" Click="Button_cameraStart_Click" IsEnabled="False"/>
+				<Button x:Name="button_cameraReverse" Content="{x:Static strs:Resources.String_reverseVCam}" Margin="0,10,0,0" 
+						Width="150" Height="40" FontSize="20" Click="Button_cameraReverse_Click" IsEnabled="False"/>
+				<Button x:Name="button_cameraStop" Content="{x:Static strs:Resources.String_stopVCam}" Margin="0,10,0,0" 
+						Width="150" Height="40" FontSize="20" Click="Button_cameraStop_Click" IsEnabled="False"/>
+			</StackPanel>
+		</Grid>
+		<Grid Grid.Row="1" Margin="10">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="*" />
+				<ColumnDefinition Width="190" />
+			</Grid.ColumnDefinitions>
+			<StackPanel Grid.Column="0" Orientation="Horizontal">
+				<Button x:Name="button_trimmingReset" Content="{x:Static strs:Resources.String_resetTrimming}" Width="180" Height="40" FontSize="20" 
+						Click="Button_trimmingReset_Click" VerticalAlignment="Center" IsEnabled="False" />
+				<CheckBox x:Name="checkbox_captureCursor" Content="{x:Static strs:Resources.String_captureCursor}" Margin="10,0,0,0" 
+						  Width="250" Height="40" FontSize="20" VerticalAlignment="Center" VerticalContentAlignment="Center" 
+						  Checked="Checkbox_captureCursor_Checked" Unchecked="Checkbox_captureCursor_Unchecked" Foreground="Gray"/>
+			</StackPanel>
+			<StackPanel Grid.Column="1" Orientation="Horizontal">
+				<Label Content="Capture FPS: " Width="120" Height="40" FontSize="20" VerticalAlignment="Center" />
+				<Label x:Name="label_captureFPS" Content="0.0" Margin="10,0,0,0" Width="60" Height="40" FontSize="20" 
+					   VerticalAlignment="Center" />
+			</StackPanel>
+		</Grid>
+	</Grid>
 </Window>
