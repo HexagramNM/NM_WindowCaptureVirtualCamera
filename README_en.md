@@ -19,9 +19,6 @@ Compared to the virtual camera of [OBS](https://obsproject.com), it has the foll
 
 * You can use the MediaFoundation virtual camera available from Windows 11. It can also be displayed in the standard Windows camera app.
 
-> [!WARNING]
-> In Windows 11 24H2, although the captured window is displayed, it has been confirmed that the screen is not being updated correctly. Since 24H2 is currently unstable, it is difficult to determine whether the issue is with the OS or this code. We plan to address this issue once the OS stabilizes. 
-
 [Update History](UpdateInfo_en.md)
 
 

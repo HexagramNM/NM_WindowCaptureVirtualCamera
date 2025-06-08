@@ -15,9 +15,6 @@
 
 * Windows 11から使用可能なMediaFoundationの仮想カメラを使用できます。Windows標準のカメラアプリにも映し出すことができます。
 
-> [!WARNING]
-> Windows 11の24H2ではキャプチャしたウィンドウが表示されるものの、正常に画面更新が行われていないことが確認されました。24H2は現状不安定であり、OSの問題か、こちらのコードの問題か切り分けづらいため、安定してから修正対応を行う予定です。
-
 [技術的な知見をまとめたWiki](https://github.com/HexagramNM/NM_WindowCaptureVirtualCamera/wiki)
 
 [更新履歴](UpdateInfo.md)
