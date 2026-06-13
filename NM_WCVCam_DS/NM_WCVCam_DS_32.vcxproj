@@ -77,6 +77,7 @@
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <DataExecutionPrevention />
       <TargetMachine>MachineX86</TargetMachine>
+      <AdditionalDependencies>RuntimeObject.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>copy /y "$(SolutionDir)NM_WCVCam_DS\$(Configuration)\NM_WCVCam_DS_32.dll" "$(SolutionDir)bin\$(Configuration)\NM_WCVCam_DS_32.dll"</Command>
@@ -103,6 +104,7 @@
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <DataExecutionPrevention />
       <TargetMachine>MachineX86</TargetMachine>
+      <AdditionalDependencies>RuntimeObject.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>copy /y "$(SolutionDir)NM_WCVCam_DS\$(Configuration)\NM_WCVCam_DS_32.dll" "$(SolutionDir)bin\$(Configuration)\NM_WCVCam_DS_32.dll"</Command>
